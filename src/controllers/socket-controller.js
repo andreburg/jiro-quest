@@ -3,7 +3,7 @@ const Socket = require("socket.io").Socket;
 /**
  * @param {Socket} socket
  */
-export const onSocketConnection = (socket) => {
+const onSocketConnection = (socket) => {
   socket.on("joinRoom", onPlayerJoin(socket));
   socket.on("leaveRoom", onPlayerLeave(socket));
   socket.on("message", ({ room, message }) => {
@@ -39,3 +39,7 @@ const onPlayerLeave = (socket) => (payload) => {
 };
 
 const onPlayerAction = (payload) => {};
+
+module.exports = {
+  onSocketConnection,
+};
