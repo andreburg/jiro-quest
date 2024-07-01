@@ -1,0 +1,15 @@
+{
+  "name": "jiroquest",
+  "version": "1.0.0",
+  "description": "Web Based game that is based on getting a ball in a hole using your phone Jiro.",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
