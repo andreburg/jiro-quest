@@ -1,4 +1,5 @@
 const { Request, Response } = require("express");
+const { get } = require("http");
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -14,11 +15,11 @@ const getHomePage = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
-const getJoinGamePage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/player/join-game.html"));
+const getGamePage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/player/game.html"));
 };
 
 module.exports = {
   getHomePage,
-  getJoinGamePage
+  getGamePage,
 };
