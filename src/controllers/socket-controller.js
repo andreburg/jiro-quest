@@ -1,11 +1,19 @@
-const Socket = require("socket.io").Socket;
+const { Socket, Server: SocketServer } = require("socket.io");
 
 /**
- * @param {Socket} socket
+ * @param {SocketServer} io
+ * @returns {(socket: Socket) => void}
  */
-const onSocketConnection = (socket) => {
-  socket.on("joinRoom", onPlayerJoin(socket));
-  socket.on("leaveRoom", onPlayerLeave(socket));
+const onSocketConnection = (io) => (socket) => {
+  socket.on("joinRoom", onPlayerJoin(io, socket));
+  socket.on("leaveRoom", onPlayerLeave(io, socket));
+
+  socket.on("requestSessionJoin", onRequestSessionJoin(io, socket));
+  socket.on("leaveSession", onSessionLeave(io, socket));
+
+  socket.on("addSessionPlayer", onAddSessionPlayer(io, socket));
+  socket.on("removeSessionPlayer", onRemoveSessionPlayer(io, socket));
+
   socket.on("message", ({ room, message }) => {
     io.to(room).emit("message", message);
   });
@@ -15,23 +23,65 @@ const onSocketConnection = (socket) => {
 };
 
 /**
- *
+ * @param {SocketServer} io
  * @param {Socket} socket
  * @returns {(payload: Object) => void}
  */
-const onPlayerJoin = (socket) => (payload) => {
-  socket.join(room);
-  console.log(`${socket.id} joined room ${room}`);
-  console.log(socket.rooms);
-  io.to(room).emit("message", `User ${socket.id} has joined the room ${room}`);
+const onRequestSessionJoin = (io, socket) => (payload) => {
+  io.to(payload.code).emit("requestSessionJoin", {
+    ...payload,
+    socketId: socket.id,
+  });
 };
 
 /**
- *
+ * @param {SocketServer} io
  * @param {Socket} socket
  * @returns {(payload: Object) => void}
  */
-const onPlayerLeave = (socket) => (payload) => {
+const onSessionLeave = (io, socket) => (payload) => {
+  io.to(payload.code).emit("playerLeave", {
+    socketId: socket.id,
+  });
+  socket.disconnect();
+};
+
+/**
+ * @param {SocketServer} io
+ * @param {Socket} socket
+ * @returns {(payload: Object) => void}
+ */
+const onAddSessionPlayer = (io, socket) => (payload) => {
+  io.sockets.sockets.get(payload.socketId).join(payload.code);
+};
+
+/**
+ * @param {SocketServer} io
+ * @param {Socket} socket
+ * @returns {(payload: Object) => void}
+ */
+const onRemoveSessionPlayer = (io, socket) => (payload) => {
+  io.sockets.sockets.get(payload.socketId).disconnect();
+};
+
+/**
+ * @param {SocketServer} io
+ * @param {Socket} socket
+ * @returns {(payload: Object) => void}
+ */
+const onPlayerJoin = (io, socket) => (payload) => {
+  socket.join(payload.code);
+  console.log(`${payload.name} joined room ${payload.code}`);
+  console.log(socket.rooms);
+  io.to(payload.code).emit("user-connected", payload);
+};
+
+/**
+ * @param {SocketServer} io
+ * @param {Socket} socket
+ * @returns {(payload: Object) => void}
+ */
+const onPlayerLeave = (io, socket) => (payload) => {
   socket.leave(room);
   socket.broadcast();
   console.log(`${socket.id} left room ${room}`);

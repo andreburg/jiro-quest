@@ -1,9 +1,11 @@
-const { getHomePage, getJoinGamePage, getGamePage } = require("../controllers/index-controller");
+const { getHomePage } = require("../controllers/index-controller");
+const { hostRouter } = require("./host-router");
+const { playerRouter } = require("./player-router");
 const indexRouter = require("express").Router();
 
 indexRouter.get("/", getHomePage);
-indexRouter.get("/player/join-game", getJoinGamePage)
-indexRouter.get("/player/game", getGamePage);
+indexRouter.use("/host", hostRouter);
+indexRouter.use("/player", playerRouter);
 
 module.exports = {
   indexRouter,

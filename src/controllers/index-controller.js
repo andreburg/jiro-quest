@@ -8,7 +8,7 @@ const path = require("path");
  * @param {Response} res
  */
 const getHomePage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/home.html"));
+  res.sendFile(path.join(__dirname, "../views/test/home.html"));
 };
 
 /**
