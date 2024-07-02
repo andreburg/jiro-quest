@@ -14,8 +14,16 @@
 <body>
     <main class="center-div">
         <h1>Enter Lobby</h1>
-        <input type="text" placeholder="Lobby Code" class="input input-large" />
-        <input type="text" placeholder="Username" class="input input-large" />
+        <form class="form">
+            <label for="lobbyCode" class="label">Lobby Code</label>
+            <input id="lobbyCode" type="text" placeholder="Lobby Code" class="input input-large" />
+            <label for="username" class="label">Username</label>
+            <input id="username" type="text" placeholder="Username" class="input input-large" />
+        </form>
+        <div class="center-div button-group">
+            <button class="button button-danger button-medium">Leave</button>
+            <button class="button button-primary button-medium">Join Lobby</button>
+        </div>
     </main>
 </body>
 

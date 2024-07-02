@@ -21,6 +21,14 @@
     --input-large-width: 25rem;
     --input-medium-width: 12.5rem;
     --input-small-width: 8rem;
+
+    --button-large-width-mobile: 90%;
+    --button-medium-width-mobile: 90%;
+    --button-small-width-mobile: 70%;
+
+    --input-large-width-mobile: 100%;
+    --input-medium-width-mobile: 100%;
+    --input-small-width-mobile: 70%;
 }
 
 .ibm-plex-mono-thin {
@@ -138,6 +146,14 @@ h1 {
     font-size: 1.2rem;
 }
 
+.button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .button:active {
     box-shadow: none;
 }
@@ -179,7 +195,59 @@ h1 {
 .input-small {
     width: var(--input-small-width);
 }
+
 .label {
     font-size: 0.8rem;
     font-weight: 700;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 540px) {
+
+  body {
+      max-width: 100%;
+      height: calc(100vh - 5rem);
+      padding: 1rem;
+      font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+  }
+
+  .button {
+    margin: 0 0;
+  }
+
+  .input-large {
+    width: var(--input-large-width-mobile);
+  }
+
+  .input-medium {
+      width: var(--input-medium-width-mobile)
+  }
+
+  .input-small {
+      width: var(--input-small-width-mobile);
+  }
+
+  .button-large {
+    width: var(--button-large-width-mobile);
+  }
+
+  .button-medium {
+      width: var(--button-medium-width-mobile)
+  }
+
+  .button-small {
+      width: var(--button-small-width-mobile);
+  }
+  .button-group {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  } 
+
+  .form {
+    width: 90%
+  }
 }
