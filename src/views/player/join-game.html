@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join Lobby</title>
-    <link rel="stylesheet" href="/public/css/globals.css" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-    </style>
+    <link rel="stylesheet" href="C:/Users/20185/Desktop/Computer Sciences/CS_FirstYear/css/globally.css" />
+    <title>Enter Lobby</title>
 </head>
-
 <body>
-    <main class="center-div">
+    <div class="center-div">
         <h1>Enter Lobby</h1>
-        <input type="text" placeholder="Lobby Code" class="input input-large" />
-        <input type="text" placeholder="Username" class="input input-large" />
-    </main>
-</body>
+        
+        <div>
+            <h3 class="label">Lobby Code</h3>
+            <input class="input input-large" placeholder="Lobby Code" />
+        </div>
 
+        <div>
+            <h3 class="label">Username</h3>
+            <input class="input input-large" placeholder="Username"/>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button class="button button-danger button-medium">Leave</button>
+            <button class="button button-primary button-medium">Join</button>
+        </div>
+    </div>
+</body>
 </html>
