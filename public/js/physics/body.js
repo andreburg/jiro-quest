@@ -129,7 +129,7 @@ export function kinematics(angle, ball, time, walls, scale, mapSize) {
     // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
     // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
   ball.acceleration.y = (-g * Math.sin(angle.beta * Math.PI / 180)) * 1 / scale;
-  ball.acceleration.x = (-g * Math.sin(angle.gamma * Math.PI / 180)) * 1 / scale;
+  ball.acceleration.x = (g * Math.sin(angle.gamma * Math.PI / 180)) * 1 / scale;
 
 
   //ensure ball does not go out of bounds
