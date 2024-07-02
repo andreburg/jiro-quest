@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       const gamma = event.gamma;
       // Do stuff with the new orientation data
       player.angles = {
-        alpha: 0,
+        alpha,
         beta,
         gamma
       }
