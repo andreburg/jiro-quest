@@ -1,17 +1,23 @@
 import { Player } from "./gameState.js";
+import * as Physics from "./physics/body.js";
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const config = {
-    framesPerSecond: 60,
     mazeSize: 3,
     ballScale: 0.33,
     cellSize: 0
   }
 
-  const canvas = createMapArea();
-  const framesPerSecond = 60;
   const mazeSize = 3;
-  const maze = generateMaze(mazeSize, mazeSize);
+//   const canvas = createMapArea(mazeSize);
+    const canvas = createUnitMapArea(mazeSize);
+    // scaleCanvas(1);
+    
+
+  //TODO: make sure host generates maze
+  const maze = Physics.generateMaze(mazeSize, mazeSize);
+  const walls = Physics.wallCoordinates(maze);
+  config.walls = walls;
 
   const cellSize = getCellSize(canvas, mazeSize)
   config.cellSize = cellSize;
@@ -23,14 +29,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const player = new Player({
     username: 'player1',
     position: {
-      x: 0,
-      y: 0
+      x: 1,
+      y: 1,
+      z: 0
     },
-    ball: {
-      radius: 0.33,
-      color: '#ff0000'
-    }
+    // ball: {
+    //   radius: 0.33,
+    //   color: '#ff0000'
+    // }
   })
+//   window.addEventListener('keydown', (event) => {
+//     if (event.key === 'ArrowUp') {
+//       player.position.y -= 10;
+//     } else if (event.key === 'ArrowDown') { 
+//         player.position.y += 10;
+//         } else if (event.key === 'ArrowLeft') {
+//         player.position.x -= 10;
+//         } else if (event.key === 'ArrowRight') {
+//         player.position.x += 10;
+//     }
+//     });
 
   // TODO: get my gyro data
   window.addEventListener("deviceorientation", (event) => {
@@ -40,18 +58,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const gamma = event.gamma;
     // Do stuff with the new orientation data
     player.angles = {
-      alpha,
+      alpha:0,
       beta,
       gamma
     }
   }, true);
 
   // draw map + ball
-  gameLoop(config, maze, player, canvas);
+  gameLoop(config, maze, [player], canvas);
 
 });
 
-function gameLoop(config, maze, player, canvas) {
+
+function gameLoop(config, maze, players, canvas) {
   // TODO: game loop: (all) get gyro data -> (all) send gyro data -> (host) calculate new ball positions ->
   // -> (host) send new ball positions -> (all) receive new ball positions -> (all) clear canvas -> (all) draw map + ball
 
@@ -62,6 +81,12 @@ function gameLoop(config, maze, player, canvas) {
   // socket.emit('gyroData', player.angles)
 
   // if player == host -> calculate new ball positions
+  players.forEach(player => {
+    Physics.kinematics(player.angles, player.ball, 0.1, config.walls);
+    console.log(player.ball.position)
+    
+  });
+
 
   // if player == host -> send new ball positions
 
@@ -76,10 +101,10 @@ function gameLoop(config, maze, player, canvas) {
 
   // all -> draw map + ball
   drawMaze(maze, config.mazeSize, config.cellSize);
-  drawBall(player, config, canvas);
+  drawBall(players[0], config, canvas);
 
   // repeat
-  window.requestAnimationFrame(() => gameLoop(config, maze, player, canvas));
+  window.requestAnimationFrame(() => gameLoop(config, maze, players, canvas));
 }
 
 // Creates and returns the canvas
@@ -93,8 +118,28 @@ function createMapArea() {
   return canvas;
 }
 
+function createUnitMapArea(mapSize) {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'gameCanvas';
+    canvas.height = 200;
+    canvas.width = 200;
+    // canvas.style.border = '1px solid black';
+    document.body.append(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = 'red';
+    ctx.strokeRect(100, 100, 200, 200);
+    ctx.strokeStyle = 'black';
+    return canvas;
+}
+
 function getCellSize(canvas, mapWidth) {
   return canvas.width / mapWidth;
+}
+
+function scaleCanvas(scale) {
+    const canvas = document.getElementById('gameCanvas');
+  const context = canvas.getContext('2d');
+  context.scale(scale, scale);
 }
 
 // render the maze on the canvas
@@ -132,12 +177,13 @@ function drawMaze(maze, size, cellSize) {
 }
 
 function drawBall(player, config, canvas) {
-  const x = player.position.x;
-  const y = player.position.y;
+  const x = player.ball.position.x;
+  const y = player.ball.position.y;
   const ballScale = config.ballScale;
   const cellSize = config.cellSize;
 
   const ctx = canvas.getContext('2d');
+  ctx.scale(1, 1);
   const radius = (cellSize * ballScale) / 2
 
   ctx.beginPath();
@@ -147,82 +193,7 @@ function drawBall(player, config, canvas) {
   ctx.closePath();
 
 }
-// generates a width * height size maze
-// each grid cell in the maze has a N wall and W wall component,
-// N is true if there is a north wall in the grid
-// W is true if there is a west wall in the gris
 
-function generateMaze(width, height) {
-  // Initialize cells
-  const cells = [];
-  for (let y = 0; y < height; y++) {
-    const row = [];
-    for (let x = 0; x < width; x++) {
-      row.push(new Cell(x, y));
-    }
-    cells.push(row);
-  }
 
-  // Initialize edges
-  const edges = [];
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (x > 0) edges.push({ x: x, y: y, direction: 'W' }); // West edge
-      if (y > 0) edges.push({ x: x, y: y, direction: 'N' }); // North edge
-    }
-  }
-  // Shuffle edges
-  for (let i = edges.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    let temp = edges[i];
-    edges[i] = edges[j];
-    edges[j] = temp;
-  }
-
-  // Create maze
-  const maze = Array.from({ length: height }, () => Array.from({ length: width }, () => ({
-    N: true, // Wall to the North
-    W: true, // Wall to the West
-  })));
-
-  // Connect cells
-  edges.forEach(edge => {
-    const { x, y, direction } = edge;
-    const cell = cells[y][x];
-    let neighbor;
-    if (direction === 'N') neighbor = cells[y - 1][x];
-    if (direction === 'W') neighbor = cells[y][x - 1];
-
-    if (cell.find() !== neighbor.find()) {
-      cell.union(neighbor);
-      maze[y][x][direction] = false; // Remove wall
-    }
-  });
-
-  return maze;
-}
-class Cell {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.parent = this; // Initially, the parent is the cell itself
-  }
-
-  // Find the root parent of the cell
-  find() {
-    if (this.parent === this) return this;
-    this.parent = this.parent.find(); // Path compression
-    return this.parent;
-  }
-
-  // Union two sets of cells
-  union(cell) {
-    const rootA = this.find();
-    const rootB = cell.find();
-    if (rootA !== rootB) {
-      rootA.parent = rootB; // Connect the two cells
-    }
-  }
-}
 
 
