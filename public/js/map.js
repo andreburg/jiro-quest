@@ -68,20 +68,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
   // if client is iOS device show popup requesting permission to access motion and orientation data
   if (window.DeviceOrientationEvent) {
-    alert('This device has gyroscope');
-    if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
-          if (permissionState === 'granted') {
-            alert('Permission granted');
-            addDeviceOrientationListener();
-          } else {
-            alert('Permission denied');
-          }
-        })
-        .catch(console.error);
-    } else {
-      addDeviceOrientationListener();
+    const startButton = document.getElementById('start');
+    startButton.style.display = 'block';
+    startButton.onclick = () => {
+      if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              alert('Permission granted');
+              addDeviceOrientationListener();
+            } else {
+              alert('Permission denied');
+            }
+            startButton.style.display = 'none';
+          })
+          .catch(console.error);
+      } else {
+        addDeviceOrientationListener();
+        startButton.style.display = 'none';
+      }
     }
   } else {
     alert('This device does not have a gyroscope');
