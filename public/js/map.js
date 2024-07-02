@@ -1,6 +1,6 @@
 import { Player } from "./gameState.js";
 import * as Physics from "./physics/body.js";
-
+let scale = 100;
 document.addEventListener('DOMContentLoaded', (event) => {
   const config = {
     mazeSize: 3,
@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     cellSize: 0
   }
 
-  const mazeSize = 3;
+  const mazeSize = config.mazeSize;
+
 //   const canvas = createMapArea(mazeSize);
-    const canvas = createUnitMapArea(mazeSize);
+  const canvas = createUnitMapArea(mazeSize, scale);
     // scaleCanvas(1);
     
 
@@ -29,8 +30,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const player = new Player({
     username: 'player1',
     position: {
-      x: 1,
-      y: 1,
+      x: (1.1) * scale / cellSize,
+      y: (1.1) * scale / cellSize,
       z: 0
     },
     // ball: {
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //   window.addEventListener('keydown', (event) => {
 //     if (event.key === 'ArrowUp') {
 //       player.position.y -= 10;
-//     } else if (event.key === 'ArrowDown') { 
+  //     } else if (event.key === 'ArrowDown') {
 //         player.position.y += 10;
 //         } else if (event.key === 'ArrowLeft') {
 //         player.position.x -= 10;
@@ -50,19 +51,41 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //     }
 //     });
 
-  // TODO: get my gyro data
-  window.addEventListener("deviceorientation", (event) => {
-    const absolute = event.absolute;
-    const alpha = event.alpha;
-    const beta = event.beta;
-    const gamma = event.gamma;
-    // Do stuff with the new orientation data
-    player.angles = {
-      alpha:0,
-      beta,
-      gamma
+  const addDeviceOrientationListener = () => {
+    // TODO: get my gyro data
+    window.addEventListener("deviceorientation", (event) => {
+      const absolute = event.absolute;
+      const alpha = event.alpha;
+      const beta = event.beta;
+      const gamma = event.gamma;
+      // Do stuff with the new orientation data
+      player.angles = {
+        alpha: 0,
+        beta,
+        gamma
+      }
+    }, true);
+  }
+  // if client is iOS device show popup requesting permission to access motion and orientation data
+  if (window.DeviceOrientationEvent) {
+    alert('This device has gyroscope');
+    if (typeof DeviceMotionEvent.requestPermission === 'function' || typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            alert('Permission granted');
+            addDeviceOrientationListener();
+          } else {
+            alert('Permission denied');
+          }
+        })
+        .catch(console.error);
+    } else {
+      addDeviceOrientationListener();
     }
-  }, true);
+  } else {
+    alert('This device does not have a gyroscope');
+  }
 
   // draw map + ball
   gameLoop(config, maze, [player], canvas);
@@ -82,9 +105,7 @@ function gameLoop(config, maze, players, canvas) {
 
   // if player == host -> calculate new ball positions
   players.forEach(player => {
-    Physics.kinematics(player.angles, player.ball, 0.1, config.walls);
-    console.log(player.ball.position)
-    
+    Physics.kinematics(player.angles, player.ball, 1, config.walls, scale, config.mazeSize);
   });
 
 
@@ -118,11 +139,11 @@ function createMapArea() {
   return canvas;
 }
 
-function createUnitMapArea(mapSize) {
+function createUnitMapArea(mapSize, scale) {
     const canvas = document.createElement('canvas');
     canvas.id = 'gameCanvas';
-    canvas.height = 200;
-    canvas.width = 200;
+  canvas.height = mapSize * scale;
+  canvas.width = mapSize * scale;
     // canvas.style.border = '1px solid black';
     document.body.append(canvas);
     const ctx = canvas.getContext('2d');
@@ -177,14 +198,13 @@ function drawMaze(maze, size, cellSize) {
 }
 
 function drawBall(player, config, canvas) {
-  const x = player.ball.position.x;
-  const y = player.ball.position.y;
   const ballScale = config.ballScale;
   const cellSize = config.cellSize;
 
   const ctx = canvas.getContext('2d');
-  ctx.scale(1, 1);
   const radius = (cellSize * ballScale) / 2
+  const x = (player.ball.position.x * scale);
+  const y = (player.ball.position.y * scale);
 
   ctx.beginPath();
   ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);

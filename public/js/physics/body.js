@@ -122,24 +122,43 @@ export class Wall{
     }
 }
 
-export function kinematics(angle, ball, time, walls){
-    console.log(angle);
-    const g = -9.81
+export function kinematics(angle, ball, time, walls, scale, mapSize) {
+  const g = -25;
+  const maxVelocity = 1 / scale;
 
     // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
     // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
-    ball.acceleration.y = -g * Math.sin(angle.beta*Math.PI/180);
-    ball.acceleration.x = -g * Math.sin(angle.gamma*Math.PI/180);
+  ball.acceleration.y = (-g * Math.sin(angle.beta * Math.PI / 180)) * 1 / scale;
+  ball.acceleration.x = (-g * Math.sin(angle.gamma * Math.PI / 180)) * 1 / scale;
 
-    wallCollision(ball, walls);
 
-    ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
-    ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+  //ensure ball does not go out of bounds
+  let newBallPositionx = ball.position.x + ball.velocity.x * time + 0.5 * ball.acceleration.x * Math.pow(time, 2) * 1 / scale;
+  if (newBallPositionx + ball.radius > mapSize || newBallPositionx < ball.radius) {
+    // apply an opposite force to the ball
+    ball.acceleration.x = -ball.acceleration.x;
+    ball.velocity.x = -ball.velocity.x;
+    ball.position.x = ball.position.x + ball.velocity.x * time + 0.5 * ball.acceleration.x * Math.pow(time, 2) * 1 / scale;
+  } else {
+    ball.position.x = newBallPositionx;
+  }
+  let newBallPositiony = ball.position.y + ball.velocity.y * time + 0.5 * ball.acceleration.y * Math.pow(time, 2) * 1 / scale;
+  if (newBallPositiony + ball.radius > mapSize || newBallPositiony < ball.radius) {
+    // apply an opposite force to the ball
+    ball.acceleration.y = -ball.acceleration.y;
+    ball.velocity.y = -ball.velocity.y;
+    ball.position.y = ball.position.y + ball.velocity.y * time + 0.5 * ball.acceleration.y * Math.pow(time, 2) * 1 / scale;
+  } else {
+    ball.position.y = newBallPositiony;
+  }
 
-    ball.velocity.x = ball.velocity.x+ball.acceleration.x*time;
-    ball.velocity.y = ball.velocity.y+ball.acceleration.y*time;
-    console.log(ball);
+  ball.position.x = Math.min((ball.position.x + ball.velocity.x * time + 0.5 * ball.acceleration.x * Math.pow(time, 2)) * 1 / scale, mapSize);
+  ball.position.y = ball.position.y + ball.velocity.y * time + 0.5 * ball.acceleration.y * Math.pow(time, 2) * 1 / scale;
 
+  ball.velocity.x = Math.min((ball.velocity.x + ball.acceleration.x * time * 1 / scale), maxVelocity);
+  ball.velocity.y = Math.min(ball.velocity.y + ball.acceleration.y * time * 1 / scale, maxVelocity);
+
+  wallCollision(ball, walls);
 }
 
 export function collision(ball1, ball2){
@@ -155,26 +174,29 @@ export function collision(ball1, ball2){
     }
 }
 
-export function wallCollision(ball, walls){
-    walls.forEach(wall => {
-        if (wall.direction === 'N'){
-            if (Math.abs(ball.position.y - wall.yStart)<=0.1 && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)){
-                ball.velocity.y = 0;
-                ball.acceleration.y = 0;
-            }
-        }
-        if (wall.direction === 'W'){
-            if (Math.abs(ball.position.x - wall.xStart)<=0.1 && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)){
-                ball.velocity.x = 0;
-                ball.acceleration.x = 0;
-            }
-        }
+export function wallCollision(ball, walls) {
+  console.log(ball);
+  walls.forEach(wall => {
+    if (wall.direction === 'N') {
+      if (Math.abs(ball.position.y - wall.yStart) <= ball.radius && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)) {
+        ball.velocity.y = -ball.velocity.y;
+        ball.acceleration.y = -ball.acceleration.y;
+        ball.position.y = ball.position.y + ball.velocity.y * 0.1 + 0.5 * ball.acceleration.y * Math.pow(0.1, 2);
+      }
     }
-    )
+    if (wall.direction === 'W') {
+      if (Math.abs(ball.position.x - wall.xStart) <= ball.radius && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)) {
+        ball.velocity.x = -ball.velocity.x;
+        ball.acceleration.x = -ball.acceleration.x;
+        ball.position.x = ball.position.x + ball.velocity.x * 0.1 + 0.5 * ball.acceleration.x * Math.pow(0.1, 2);
+      }
+    }
+  })
 }
 
 export function wallCoordinates(maze){
-    const walls = [];
+  const walls = [];
+  const mazeSize = maze.length;
     maze.forEach((row, y) => {
         row.forEach((cell,x) => {
             if (cell.N) {
@@ -183,6 +205,14 @@ export function wallCoordinates(maze){
             if (cell.W) {
                 walls.push(new Wall({x, y, direction: 'W'}));
             }
+
+          if (x === mazeSize - 1 && cell.N) {
+            walls.push(new Wall({ x: x + 1, y, direction: 'N' }));
+          }
+
+          if (y === mazeSize - 1 && cell.W) {
+            walls.push(new Wall({ x, y: y + 1, direction: 'W' }));
+          }
         });
     })
     return walls;
