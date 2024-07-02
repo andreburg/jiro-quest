@@ -122,24 +122,35 @@ export class Wall{
     }
 }
 
-export function kinematics(angle, ball, time, walls){
-    console.log(angle);
-    const g = -9.81
+export function kinematics(angle, ball, time, walls, mapsize){
+    // console.log(angle);
+    const g = -1
+    const rebounce = 0.8
 
     // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
     // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
     ball.acceleration.y = -g * Math.sin(angle.beta*Math.PI/180);
     ball.acceleration.x = -g * Math.sin(angle.gamma*Math.PI/180);
 
-    wallCollision(ball, walls);
-
-    ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
-    ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
-
     ball.velocity.x = ball.velocity.x+ball.acceleration.x*time;
     ball.velocity.y = ball.velocity.y+ball.acceleration.y*time;
-    console.log(ball);
+    
+    const newX= ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+    const newY = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
 
+    if(newX + ball.radius > mapsize || newX - ball.radius < 0){
+        ball.velocity.x = -ball.velocity.x*rebounce;
+        ball.acceleration.x = -ball.acceleration.x*rebounce;
+        ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+    }else(ball.position.x = newX)
+
+    if(newY + ball.radius > mapsize || newY - ball.radius < 0){
+        ball.velocity.y = -ball.velocity.y*rebounce;
+        ball.acceleration.y = -ball.acceleration.y*rebounce;
+        ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+    }else(ball.position.y = newY)
+
+    wallCollision(ball, walls);
 }
 
 export function collision(ball1, ball2){
@@ -159,14 +170,14 @@ export function wallCollision(ball, walls){
     walls.forEach(wall => {
         if (wall.direction === 'N'){
             if (Math.abs(ball.position.y - wall.yStart)<=0.1 && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)){
-                ball.velocity.y = 0;
-                ball.acceleration.y = 0;
+                ball.velocity.y = -ball.velocity.y;
+                ball.acceleration.y = -ball.acceleration.y;
             }
         }
         if (wall.direction === 'W'){
             if (Math.abs(ball.position.x - wall.xStart)<=0.1 && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)){
-                ball.velocity.x = 0;
-                ball.acceleration.x = 0;
+                ball.velocity.x = -ball.velocity.x;
+                ball.acceleration.x = -ball.acceleration.x;
             }
         }
     }
@@ -258,7 +269,7 @@ export class Cell {
         maze[y][x][direction] = false; // Remove wall
       }
     });
-  
+    // console.log(maze)
     return maze;
   }
   
@@ -277,8 +288,8 @@ function main() {
     const angle = new Angle({beta: -30, gamma: 30});
     for (let i = 0; i < 10; i++){
         kinematics(angle, ball, 0.1, walls);
-        console.log(i)
-        console.log(ball);
+        // console.log(i)
+        // console.log(ball);
     }
 
 
