@@ -1,3 +1,5 @@
+import { Vector, Ball } from "./physics/body.js";
+
 export default class State {
     constructor({
         roundOver = false,
@@ -40,7 +42,7 @@ export class Player {
     constructor({
         username,
         position,
-        ball
+        // ball
     }) {
         this.username = username;
         this.angles = {
@@ -48,18 +50,6 @@ export class Player {
             gamma: 0,
             beta: 0
         };
-        this.position = position
-        this.velocity = {
-            x: 0,
-            y: 0,
-            z: 0,
-        };
-        this.acceleration = {
-            x: 0,
-            y: 0,
-            z: 0,
-        };
-        this.mass = 1;
         this.powerUps = {
             increasedMass: {
                 active: false,
@@ -77,17 +67,9 @@ export class Player {
                 remainingDuration: 0,
             }
         };
-        this.ball = ball;
+        this.ball = new Ball({mass: 1, position: position, velocity: new Vector({ x: 0, y: 0, z: 0 }), acceleration: new Vector({ x: 0, y: 0, z: 0 }), radius: 0.33, colour: '#ff0000'});
     }
 
-}
-
-export class Ball {
-    constructor({
-        x,
-        y,
-    }) {
-    }
 }
 
 

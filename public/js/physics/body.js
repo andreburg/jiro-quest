@@ -1,5 +1,5 @@
 
-class Vector {
+export class Vector {
     constructor({x, y, z}) {
         this.x = x;
         this.y = y;
@@ -88,23 +88,25 @@ class Vector {
     // };
 }
 
-class Angle{
+export class Angle{
     constructor({beta,gamma}){
         this.beta = beta;
         this.gamma = gamma;
     }
 }
 
-class Ball{
-    constructor({mass,position,velocity,acceleration}){
+export class Ball{
+    constructor({mass,position,velocity,acceleration,radius,colour}){
         this.mass = mass;
-        this.initialPosition = new Vector(position);
-        this.initialVelocity = new Vector(velocity);
+        this.position = new Vector(position);
+        this.velocity = new Vector(velocity);
         this.acceleration = new Vector(acceleration);
+        this.radius = radius;
+        this.colour = colour;
     } 
 }
 
-class Wall{
+export class Wall{
     constructor({x, y, direction}){
         this.xStart = x;
         this.yStart = y;
@@ -120,45 +122,50 @@ class Wall{
     }
 }
 
-function kinematics(angle, ball, time, walls){
+export function kinematics(angle, ball, time, walls){
+    console.log(angle);
     const g = -9.81
-    ball.acceleration.x = g * Math.sin(angle.beta);
-    ball.acceleration.y = g * Math.sin(angle.gamma);
+
+    // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
+    // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
+    ball.acceleration.y = -g * Math.sin(angle.beta*Math.PI/180);
+    ball.acceleration.x = -g * Math.sin(angle.gamma*Math.PI/180);
 
     wallCollision(ball, walls);
 
-    ball.initialPosition.x = ball.initialPosition.x + ball.initialVelocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
-    ball.initialPosition.y = ball.initialPosition.y + ball.initialVelocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+    ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+    ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
 
-    ball.initialVelocity.x = ball.initialVelocity.x+ball.acceleration.x*time;
-    ball.initialVelocity.y = ball.initialVelocity.y+ball.acceleration.y*time;
+    ball.velocity.x = ball.velocity.x+ball.acceleration.x*time;
+    ball.velocity.y = ball.velocity.y+ball.acceleration.y*time;
+    console.log(ball);
 
 }
 
-function collision(ball1, ball2){
-    let distance = Math.sqrt(Math.pow(ball1.initialPosition.x - ball2.initialPosition.x,2) + Math.pow(ball1.initialPosition.y - ball2.initialPosition.y,2));
+export function collision(ball1, ball2){
+    let distance = Math.sqrt(Math.pow(ball1.position.x - ball2.position.x,2) + Math.pow(ball1.position.y - ball2.position.y,2));
     if (distance <= 1){
-        vfx = (ball1.mass*ball1.initialVelocity.x + ball2.mass*ball2.initialVelocity.x)/(ball1.mass + ball2.mass);
-        vfy = (ball1.mass*ball1.initialVelocity.y + ball2.mass*ball2.initialVelocity.y)/(ball1.mass + ball2.mass);
+        vfx = (ball1.mass*ball1.velocity.x + ball2.mass*ball2.velocity.x)/(ball1.mass + ball2.mass);
+        vfy = (ball1.mass*ball1.velocity.y + ball2.mass*ball2.velocity.y)/(ball1.mass + ball2.mass);
 
-        ball1.initialVelocity.x = vfx;
-        ball1.initialVelocity.y = vfy;
-        ball2.initialVelocity.x = vfx;
-        ball2.initialVelocity.y = vfy;
+        ball1.velocity.x = vfx;
+        ball1.velocity.y = vfy;
+        ball2.velocity.x = vfx;
+        ball2.velocity.y = vfy;
     }
 }
 
-function wallCollision(ball, walls){
+export function wallCollision(ball, walls){
     walls.forEach(wall => {
         if (wall.direction === 'N'){
-            if (Math.abs(ball.initialPosition.y - wall.yStart)<=0.1 && (ball.initialPosition.x >= wall.xStart && ball.initialPosition.x <= wall.xEnd)){
-                ball.initialVelocity.y = 0;
+            if (Math.abs(ball.position.y - wall.yStart)<=0.1 && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)){
+                ball.velocity.y = 0;
                 ball.acceleration.y = 0;
             }
         }
         if (wall.direction === 'W'){
-            if (Math.abs(ball.initialPosition.x - wall.xStart)<=0.1 && (ball.initialPosition.y >= wall.yStart && ball.initialPosition.y <= wall.yEnd)){
-                ball.initialVelocity.x = 0;
+            if (Math.abs(ball.position.x - wall.xStart)<=0.1 && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)){
+                ball.velocity.x = 0;
                 ball.acceleration.x = 0;
             }
         }
@@ -166,7 +173,7 @@ function wallCollision(ball, walls){
     )
 }
 
-function wallCoordinates(maze){
+export function wallCoordinates(maze){
     const walls = [];
     maze.forEach((row, y) => {
         row.forEach((cell,x) => {
@@ -182,7 +189,7 @@ function wallCoordinates(maze){
 }
 
 ///////
-class Cell {
+export class Cell {
     constructor(x, y) {
       this.x = x;
       this.y = y;
@@ -206,7 +213,7 @@ class Cell {
     }
   }
   
-  function generateMaze(width, height) {
+  export function generateMaze(width, height) {
     // Initialize cells
     const cells = [];
     for (let y = 0; y < height; y++) {
