@@ -34,5 +34,3 @@ class Player {
     this.powerUps.push(powerUp);
   }
 }
-
-module.exports = Player;

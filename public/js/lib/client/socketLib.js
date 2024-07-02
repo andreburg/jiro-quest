@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
-import Player from "./player";
-import Host from "./host";
+import Player from "../../player";
+import Host from "../../host";
 
 /** @param {Player} player */
 export const subscribePlayerEvents = (player) => {

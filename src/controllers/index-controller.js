@@ -8,15 +8,31 @@ const path = require("path");
  * @param {Response} res
  */
 const getHomePage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/test/home.html"));
+  res.sendFile(path.join(__dirname, "../views/home.html"));
 };
 
 /**
  * @param {Request} req
  * @param {Response} res
  */
-const getJoinGamePage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/player/join-game.html"));
+const getCreatePage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/create.html"));
+};
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+const getJoinPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/join.html"));
+};
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+const getSignInPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/signin.html"));
 };
 
 /**
@@ -28,7 +44,9 @@ const getGamePage = async (req, res) => {
 };
 
 module.exports = {
+  getCreatePage,
+  getJoinPage,
   getHomePage,
-  getJoinGamePage,
+  getJoinPage,
   getGamePage,
 };

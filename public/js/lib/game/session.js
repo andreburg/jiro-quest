@@ -1,16 +1,16 @@
-const { Socket } = require("socket.io");
+const { Socket, Server } = require("socket.io");
 const Game = require("./game");
 const Player = require("./player");
+const { generateUID } = require("../utils");
 
 class Session {
-  /** @param {Socket} socket @param {{sessionName: string, code: string}} sessionInfo */
-  constructor(socket, sessionInfo) {
-    this.socket = socket;
-    this.sessionName = sessionInfo.sessionName;
-    this.code = sessionInfo.code;
+  /** @param {Server} io @param {string} sessionName @param {string} hostSocketId*/
+  constructor(io, sessionName, hostSocketId) {
+    this.io = io;
+    this.sessionName = sessionName;
+    this.host = hostSocketId;
+    this.code = generateUID();
     this.players = [];
-    /** @type {Game} */
-    this.game = null;
   }
 
   /** @param {{socketId: string, name: string}} playerInfo */
@@ -29,18 +29,6 @@ class Session {
     if (playerToRemoveIndex != -1) {
       this.players = this.players.splice(playerToRemoveIndex);
     }
-  }
-
-  getPlayer(socketId) {
-    return this.players.find((player) => player.socketId === socketId);
-  }
-
-  startGame() {
-    this.game = new Game();
-  }
-
-  endGame() {
-    this.game.end();
   }
 
   end() {}

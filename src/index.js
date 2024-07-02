@@ -13,8 +13,10 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = http.createServer(app);
+/* * @type {socketIo.Server} */
 const io = socketIo(server);
 
+app.use(express.json());
 app.use(cors());
 app.use(indexRouter);
 app.use("/public", express.static(path.join(__dirname, "../public/")));
