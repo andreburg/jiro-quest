@@ -1,7 +1,7 @@
 const { Socket, Server: SocketServer } = require("socket.io");
 const { generateUID, hostProtected, JWT_SECRET } = require("../lib/utils");
-const sessions = require("../lib/sessions");
-const { users } = require("../lib/users");
+const { sessions, getUserSession } = require("../lib/sessions");
+const { users, getUsername } = require("../lib/users");
 const jwt = require("jsonwebtoken");
 
 /** @param {SocketServer} io @returns {(socket: Socket) => void} */
@@ -14,9 +14,6 @@ const onSocketConnection = (io) => (socket) => {
     leaveSession: onLeaveSession,
 
     // Host Actions
-    startGame: hostProtected(onStartGame),
-    endGame: hostProtected(onEndGame),
-    updateGameState: hostProtected(onUpdateGameState),
     kickSocket: hostProtected(onKickSocket),
 
     // Client Actions
@@ -58,6 +55,10 @@ const onAuth = (io, socket) => (payload) => {
           username: decoded,
         },
       });
+      const username = new Array(users.entries()).find(
+        ([key, value]) => value === socket.id
+      );
+      console.log(username);
     }
   });
 };
@@ -82,9 +83,7 @@ const onEndSession = (io, socket) => (payload) => {
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onJoinSession = (io, socket) => (payload) => {
-  const username = new Array(users.entries()).find(
-    ([key, value]) => value === socket.id
-  );
+  const username = getUsername(socket.id);
 
   const session = sessions.get(payload.sessionId);
   if (!session) {
@@ -111,15 +110,24 @@ const onJoinSession = (io, socket) => (payload) => {
   socket.join(payload.sessionId);
   session.playerUsernames.push(username);
   io.to(payload.code).emit("playerJoined", {
-    socketId: socket.id,
-    name: payload.name,
+    username,
   });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onLeaveSession = (io, socket) => (payload) => {
-  const session = sessions.get(payload.sessionId);
-  socket.leave(payload.sessionId);
+  const username = getUsername(socket.id);
+  const userSession = getUserSession(username);
+  const currentSession = sessions.get(userSession);
+
+  socket.leave(userSession);
+  sessions.set(userSession, {
+    ...currentSession,
+    playerUsernames: currentSession.playerUsernames.filter(
+      (u) => u !== username
+    ),
+  });
+
   const socketIndex = session.sockets.find(
     (socketId) => socketId === socket.id
   );
@@ -134,22 +142,6 @@ const onLeaveSession = (io, socket) => (payload) => {
     socketId: socket.id,
   });
   socket.disconnect();
-};
-
-/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onStartGame = (io, socket) => (payload) => {};
-
-/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onEndGame = (io, socket) => (payload) => {};
-
-/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onUpdateGameState = (io, socket) => (payload) => {
-  const sessionId = generateUID();
-  sessions.set(sessionId, {
-    hostSocketId: socket.id,
-    sessionName: payload.sessionName,
-  });
-  socket.join(sessionId);
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
