@@ -150,7 +150,7 @@ export function kinematics(angle, ball, time, walls, mapsize){
         ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
     }else(ball.position.y = newY)
 
-    wallCollision(ball, walls);
+    wallCollision(ball, walls, time);
 }
 
 export function collision(ball1, ball2){
@@ -166,18 +166,20 @@ export function collision(ball1, ball2){
     }
 }
 
-export function wallCollision(ball, walls){
+export function wallCollision(ball, walls, time){
     walls.forEach(wall => {
         if (wall.direction === 'N'){
             if (Math.abs(ball.position.y - wall.yStart)<=0.1 && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)){
                 ball.velocity.y = -ball.velocity.y;
                 ball.acceleration.y = -ball.acceleration.y;
+                ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
             }
         }
         if (wall.direction === 'W'){
             if (Math.abs(ball.position.x - wall.xStart)<=0.1 && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)){
                 ball.velocity.x = -ball.velocity.x;
                 ball.acceleration.x = -ball.acceleration.x;
+                ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
             }
         }
     }
