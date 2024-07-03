@@ -152,7 +152,7 @@ export const gameLoop = (config, players, socket) => () => {
       game: gameState,
     });
     window.requestAnimationFrame(gameLoop(config, players, socket));
-  }, 100);
+  }, 50);
 };
 
 export const drawGame = (canvas, gameState) => {
