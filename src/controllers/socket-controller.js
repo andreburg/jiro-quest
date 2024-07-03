@@ -14,12 +14,40 @@ const onSocketConnection = (io) => (socket) => {
 
     // Host Actions
     kickPlayer: hostProtected(onKickPlayer),
+    sessionStateChange: hostProtected(onSessionStateChange),
+    gameStateChange: hostProtected(onGameStateChange),
   };
 
   for (let key in socketRouter) {
     let func = socketRouter[key];
     socket.on(key, func(io, socket));
   }
+};
+
+/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
+const onGameStateChange = (io, socket) => (payload) => {
+  console.log(payload.game);
+
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const userSession = getUserSession(username);
+  sessions.set(userSession, payload.game);
+  io.in(userSession).emit("gameStateChange", { game: payload.game });
+};
+
+/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
+const onSessionStateChange = (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const userSession = getUserSession(username);
+  sessions.set(userSession, payload.session);
+  io.in(userSession).emit("sessionStateChange", { session: payload.session });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
