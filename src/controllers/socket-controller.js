@@ -36,10 +36,12 @@ const onPlayerReady = (io, socket) => (payload) => {
   });
 
   const userSession = getUserSession(username);
-  const session = sessions.get(userSession);
+  try {
+    const session = sessions.get(userSession);
 
-  session.players.find((player) => player.username === username).ready = true;
-  io.in(userSession).emit("sessionStateChange", { session });
+    session.players.find((player) => player.username === username).ready = true;
+    io.in(userSession).emit("sessionStateChange", { session });
+  } catch (err) {}
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
