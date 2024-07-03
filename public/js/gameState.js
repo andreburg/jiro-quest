@@ -67,9 +67,14 @@ export class Player {
                 remainingDuration: 0,
             }
         };
-        this.ball = new Ball({mass: 1, position: position, velocity: new Vector({ x: 0, y: 0, z: 0 }), acceleration: new Vector({ x: 0, y: 0, z: 0 }), radius: 0.33, colour: '#ff0000'});
+        this.ball = new Ball({ mass: 1, position: position, velocity: new Vector({ x: 0, y: 0, z: 0 }), acceleration: new Vector({ x: 0, y: 0, z: 0 }), radius: 0.1, colour: generateRandomColorString() });
     }
 
 }
+function generateRandomColorString() {
+    const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'pink', 'black', 'white', 'grey'];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
 
 

@@ -30,5 +30,5 @@ const getSpectatorPage = async (req, res) => {
 module.exports = {
   getHomePage,
   getGamePage,
-  getSpectatorPage
+  getSpectatorPage,
 };
