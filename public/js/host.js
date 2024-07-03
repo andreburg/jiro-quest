@@ -15,6 +15,10 @@ const kickPlayer = (username) => {
   socket.emit("kickPlayer", { username });
 };
 
+socket.on("disconnected", () => {
+  window.location.pathname = "/";
+});
+
 socket.on("sessionStateChange", ({ session }) => {
   console.log(session);
   sessionState = session;
@@ -32,6 +36,8 @@ const render = {
                       <tr>
                           <th>#</th>
                           <th>Username</th>
+                           <th>Ready</th>
+
                       </tr>
                   </thead>
                   <tbody>
@@ -41,6 +47,8 @@ const render = {
                         <tr>
                           <td>${i + 1}</td>
                           <td>${player.username}</td>
+                          <td>${player.ready}</td>
+
                           <td>
                       ${
                         player.username !== sessionState.hostUsername
@@ -62,28 +70,47 @@ const render = {
               </table>
               <div>
                   <button class="button button-danger button-medium" onclick={}>Exit</button>
-                  <button class="button button-success button-medium" id="start-game-button">Start</button>
+                  ${
+                    sessionState.players.find(
+                      (player) => player.socketId === socket.id
+                    )?.ready
+                      ? ""
+                      : `
+                                  <button id="readyButton">Ready Up</button>
+                                  `
+                  }
               </div>
+              ${
+                sessionState.players.every((player) => player.ready)
+                  ? `
+                <div>
+                  <button class="button button-success button-medium" id="start-game-button">Start</button>
+                </div>
+                `
+                  : ""
+              }
           </div>
       `;
-
       document.querySelectorAll(".kick-player-button").forEach((kickButton) => {
         kickButton.addEventListener("click", () => {
           kickPlayer(kickButton.id.split("-")[3]);
         });
       });
-
-      document
-        .querySelector("#start-game-button")
-        .addEventListener("click", () => {
-          socket.emit("sessionStateChange", {
-            session: {
-              ...sessionState,
-              status: "round",
-              round: sessionState.round + 1,
-            },
+      if (document.querySelector("#start-game-button"))
+        document
+          .querySelector("#start-game-button")
+          .addEventListener("click", () => {
+            socket.emit("sessionStateChange", {
+              session: {
+                ...sessionState,
+                status: "round",
+                round: sessionState.round + 1,
+              },
+            });
           });
-        });
+
+      if (document.querySelector("#readyButton"))
+        initializeGyroscope(socket, document.querySelector("#readyButton"));
     },
     hidrate: () => {
       document.querySelector("#app").innerHTML = `
@@ -106,10 +133,7 @@ const render = {
       let gameState;
 
       const mapArea = document.querySelector("#unit-map-area");
-
-      initializeGyroscope(socket);
       const canvas = createUnitMapArea(mapArea);
-      config.mazeSize;
 
       let players = sessionState.players.map(
         (player) =>
@@ -127,8 +151,8 @@ const render = {
       });
 
       socket.on("playerOrientationChange", ({ username, angles }) => {
-        let foundUser = players.find((player) => player.username == username)
-        if(foundUser){
+        let foundUser = players.find((player) => player.username == username);
+        if (foundUser) {
           foundUser.angles = angles;
         }
       });

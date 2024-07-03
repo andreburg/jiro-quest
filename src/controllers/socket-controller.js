@@ -19,12 +19,27 @@ const onSocketConnection = (io) => (socket) => {
 
     // Player Actions
     playerOrientationChange: onPlayerOrientationChange,
+    playerReady: onPlayerReady,
   };
 
   for (let key in socketRouter) {
     let func = socketRouter[key];
     socket.on(key, func(io, socket));
   }
+};
+
+/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
+const onPlayerReady = (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const userSession = getUserSession(username);
+  const session = sessions.get(userSession);
+
+  session.players.find((player) => player.username === username).ready = true;
+  io.in(userSession).emit("sessionStateChange", { session });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
@@ -37,7 +52,7 @@ const onPlayerOrientationChange = (io, socket) => (payload) => {
   const userSession = getUserSession(username);
   io.in(userSession).emit("playerOrientationChange", {
     username,
-    angles: {alpha: payload.alpha, beta: payload.beta, gamma: payload.gamma},
+    angles: { alpha: payload.alpha, beta: payload.beta, gamma: payload.gamma },
   });
 };
 
@@ -127,7 +142,7 @@ const onJoinSession = (io, socket) => (payload) => {
 
   socket.join(payload.sessionId);
 
-  let newPlayer = { socketId: socket.id, username: username };
+  let newPlayer = { socketId: socket.id, username: username, ready: false };
 
   session.players = [
     ...session.players.filter(

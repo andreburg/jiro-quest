@@ -120,11 +120,7 @@ export const drawGame = (canvas, gameState) => {
   players.forEach((player) => drawBall(player, config, canvas));
 };
 
-export function initializeGyroscope(socket) {
-  const startButton = document.createElement("button");
-  startButton.id = "start";
-  startButton.innerHTML = "Start";
-  document.body.append(startButton);
+export function initializeGyroscope(socket, startButton) {
   const addDeviceOrientationListener = () => {
     // TODO: get my gyro data
     window.addEventListener(
@@ -132,8 +128,8 @@ export function initializeGyroscope(socket) {
       (event) => {
         socket.emit("playerOrientationChange", {
           alpha: event.alpha,
-            beta: event.beta,
-            gamma: event.gamma,
+          beta: event.beta,
+          gamma: event.gamma,
         });
       },
       true
@@ -153,14 +149,20 @@ export function initializeGyroscope(socket) {
             if (permissionState === "granted") {
               alert("Permission granted");
               addDeviceOrientationListener();
+              socket.emit("playerReady", {});
             } else {
               alert("Permission denied");
+              window.location.pathname = "/join";
             }
             startButton.style.display = "none";
           })
-          .catch(console.error);
+          .catch((err) => {
+            window.location.pathname = "/join";
+          });
       } else {
         addDeviceOrientationListener();
+        socket.emit("playerReady", {});
+
         startButton.style.display = "none";
       }
     };
