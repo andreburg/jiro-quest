@@ -1,4 +1,12 @@
 :root {
+
+      /* CSS HEX */
+    --yellow: #F6FD1Dff;
+    --neon-blue: #4E69FDff;
+    --aquamarine: #50FFAFff;
+    --bittersweet: #FF4D4Dff;
+    --tropical-indigo: #9C7BFFff;
+
     --black: #000;
     --box-shadow-large: 0.5rem 0.5rem 0 0 var(--black);
     --box-shadow-medium: 0.25rem 0.25rem 0 0 var(--black);
@@ -7,7 +15,7 @@
     --border-thin: 0.1rem solid var(--black);
     --border-thin-gray: 0.1rem solid gray;
     --headline-container-background: #F24C00;
-    --page-background: #FFFFFF;
+    --page-background: #50FFAFff;
     --page-background-alternative: #F9E900;
     --container-background-primary: #EDDFEF;
     --container-background-secondary: #F9C784;
@@ -27,7 +35,152 @@
     --input-large-width: 25rem;
     --input-medium-width: 12.5rem;
     --input-small-width: 8rem;
+
+    --border-radius: 0.8rem;
 }
+
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes bounce {
+  from,
+  20%,
+  53%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -30px, 0) scaleY(1.1);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0) scaleY(1.05);
+  }
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0) scaleY(0.95);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0) scaleY(1.02);
+  }
+}
+
+@-moz-keyframes bounce {
+  from,
+  20%,
+  53%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -30px, 0) scaleY(1.1);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0) scaleY(1.05);
+  }
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0) scaleY(0.95);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0) scaleY(1.02);
+  }
+}
+
+@-o-keyframes bounce {
+  from,
+  20%,
+  53%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -30px, 0) scaleY(1.1);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0) scaleY(1.05);
+  }
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0) scaleY(0.95);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0) scaleY(1.02);
+  }
+}
+
+@keyframes bounce {
+  from,
+  20%,
+  53%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -30px, 0) scaleY(1.1);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0) scaleY(1.05);
+  }
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0) scaleY(0.95);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0) scaleY(1.02);
+  }
+}
+
+
 
 .ibm-plex-mono-thin {
   font-family: "IBM Plex Mono", monospace;
@@ -115,9 +268,44 @@
 
 body {
     max-width: 100%;
-    height: calc(100vh - 5rem);
+    height: calc(100vh - 8rem);
+    height: calc(-webkit-fill-available - 4rem);
     padding: 2rem;
     font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+    background-color: var(--page-background);
+    background-image: url("/public/assets/background.png");
+}
+
+input {
+    font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: 0.75rem;
+    border: var(--border-thin);
+    box-shadow: var(--box-shadow-small);
+    margin: 0.5rem 0;
+    max-width: 80vw;
+    min-height: 2rem;
+    border-radius: var(--border-radius);
+}
+
+button {
+    font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0.5rem;
+    border: var(--border-thin);
+    box-shadow: var(--box-shadow-small);
+    cursor: pointer;
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
+    max-width: 80vw;
+    min-height: 3rem;
+    background-color: var(--tropical-indigo);
+}
+
+button:active {
+    box-shadow: none;
 }
 
 h1 {
@@ -381,4 +569,175 @@ div > h2 {
 
 .overflow-table {
   overflow: auto;
+}
+
+.logo-container-sign-in-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  background-color: var(--yellow);
+  box-shadow: var(--box-shadow-large);
+  border: var(--border-thick);
+  border-radius: var(--border-radius);
+  height: 30vh;
+  width: 100%;
+}
+
+.logo-container-sign-in-page > img {
+  height: 75%;
+  width: auto;
+}
+
+
+.signin-page-container > img {
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+
+  -webkit-animation: spin 15s linear infinite;
+  -moz-animation: spin 15s linear infinite;
+  -o-animation: spin 15s linear infinite;
+  animation: spin 15s linear infinite;
+}
+
+.signin-page-container > img:nth-child(1) {
+  top: calc(10%);
+  left: calc(10%);
+  scale: 1.5;
+  z-index: 0;
+  -webkit-filter: drop-shadow(2px 2px 0 var(--neon-blue))
+                drop-shadow(-2px 2px 0 var(--neon-blue))
+                drop-shadow(2px -2px 0 var(--neon-blue))
+                drop-shadow(-2px -2px 0 var(--neon-blue))
+                drop-shadow(0 0 0px var(--neon-blue));
+
+  filter: drop-shadow(2px 2px 0 var(--neon-blue))
+          drop-shadow(-2px 2px 0 var(--neon-blue))
+          drop-shadow(2px -2px 0 var(--neon-blue))
+          drop-shadow(-2px -2px 0 var(--neon-blue))
+          drop-shadow(0 0 0px var(--neon-blue));
+
+  rotate: 1turn;
+
+  /* bounce up and down infinitely */
+  -webkit-animation: bounce 10s infinite;
+  -moz-animation: bounce 10s infinite;
+  -o-animation: bounce 10s infinite;
+  animation: bounce 10s infinite;
+}
+
+.signin-page-container > img:nth-child(2) {
+  top: 20%;
+  right: 5%;
+  scale: 1.5;
+  z-index: 0;
+
+  -webkit-filter: drop-shadow(2px 2px 0 var(--tropical-indigo))
+                drop-shadow(-2px 2px 0 var(--tropical-indigo))
+                drop-shadow(2px -2px 0 var(--tropical-indigo))
+                drop-shadow(-2px -2px 0 var(--tropical-indigo))
+                drop-shadow(0 0 0px var(--tropical-indigo));
+
+  filter: drop-shadow(2px 2px 0 var(--tropical-indigo))
+          drop-shadow(-2px 2px 0 var(--tropical-indigo))
+          drop-shadow(2px -2px 0 var(--tropical-indigo))
+          drop-shadow(-2px -2px 0 var(--tropical-indigo))
+          drop-shadow(0 0 0px var(--tropical-indigo));
+
+  rotate: 1.8turn;
+}
+
+.signin-page-container > img:nth-child(3) {
+  bottom: 0%;
+  left: 5%;
+  scale: 3;
+  z-index: -1;
+
+  -webkit-filter: drop-shadow(2px 2px 0 var(--bittersweet))
+                drop-shadow(-2px 2px 0 var(--bittersweet))
+                drop-shadow(2px -2px 0 var(--bittersweet))
+                drop-shadow(-2px -2px 0 var(--bittersweet))
+                drop-shadow(0 0 0px var(--bittersweet));
+
+  filter: drop-shadow(2px 2px 0 var(--bittersweet))
+          drop-shadow(-2px 2px 0 var(--bittersweet))
+          drop-shadow(2px -2px 0 var(--bittersweet))
+          drop-shadow(-2px -2px 0 var(--bittersweet))
+          drop-shadow(0 0 0px var(--bittersweet));
+
+
+  -webkit-animation: none;
+  -moz-animation: none;
+  -o-animation: none;
+  animation: none;
+}
+
+.button-with-image {
+  position: relative;
+}
+
+.button-with-image > img {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.5rem;
+  position: absolute;
+  top: 0%;
+  right: -5%;
+
+  -webkit-animation: spin 15s linear infinite;
+  -moz-animation: spin 15s linear infinite;
+  -o-animation: spin 15s linear infinite;
+  animation: spin 15s linear infinite;
+}
+
+.button-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-right: 0.5rem;
+  margin-bottom: -0.2rem;
+}
+
+.join-prompt {
+  background-color: var(--yellow);
+  box-shadow: var(--box-shadow-large);
+  border: var(--border-thick);
+  border-radius: var(--border-radius);
+  max-width: 95vw;
+  max-heght: 40vh;
+  height: 20vh;
+  min-height: 20vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.join-prompt > h1 {
+  text-align: center;
+}
+
+.join-or-create-page > img {
+  /* cover image */
+  width: 20vh;
+  height: 20vh;
+  position: absolute;
+  top: 20vh;
+  left: 0;
+
+  /* filter */
+  -webkit-filter: drop-shadow(2px 2px 0 var(--black))
+                drop-shadow(-2px 2px 0 var(--black))
+                drop-shadow(2px -2px 0 var(--black))
+                drop-shadow(-2px -2px 0 var(--black))
+                drop-shadow(0 0 0px var(--black));
+
+  filter: drop-shadow(2px 2px 0 var(--black))
+          drop-shadow(-2px 2px 0 var(--black))
+          drop-shadow(2px -2px 0 var(--black))
+          drop-shadow(-2px -2px 0 var(--black))
+          drop-shadow(0 0 0px var(--black));
+
+
 }
