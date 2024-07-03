@@ -150,33 +150,35 @@ const render = {
       const ballArea = document.querySelector("#ball-canvas-container");
       const ballCanvas = createUnitMapArea(ballArea);
 
-      let players = sessionState.players.map(
-        (player, index) => {
-          let startPositions = {}          
-          switch (index) {
-            case 0:
-              startPositions = { x: 0.5, y: 0.5, z: 0 };
-              break;
-            case 1:
-              startPositions = { x: 0.5, y: confg.mazeSize - 0.5, z: 0 };
-              break;
-            case 2:
-              startPositions = { x: confg.mazeSize - 0.5, y: 0.5, z: 0 };
-              break;
-            case 3:
-              startPositions = { x: confg.mazeSize - 0.5, y: confg.mazeSize - 0.5, z: 0 };
-              break;
-            default:
-              startPositions = { x: 0.5, y: 0.5, z: 0.5 };
-              break;
-          }
-          console.log(startPositions)
-          return new Player({
-            username: player.username,
-            position: startPositions,
-          })
+      let players = sessionState.players.map((player, index) => {
+        let startPositions = {};
+        switch (index) {
+          case 0:
+            startPositions = { x: 0.5, y: 0.5, z: 0 };
+            break;
+          case 1:
+            startPositions = { x: 0.5, y: confg.mazeSize - 0.5, z: 0 };
+            break;
+          case 2:
+            startPositions = { x: confg.mazeSize - 0.5, y: 0.5, z: 0 };
+            break;
+          case 3:
+            startPositions = {
+              x: confg.mazeSize - 0.5,
+              y: confg.mazeSize - 0.5,
+              z: 0,
+            };
+            break;
+          default:
+            startPositions = { x: 0.5, y: 0.5, z: 0.5 };
+            break;
         }
-      );
+        console.log(startPositions);
+        return new Player({
+          username: player.username,
+          position: startPositions,
+        });
+      });
 
       window.requestAnimationFrame(gameLoop(confg, players, socket));
 
