@@ -91,6 +91,7 @@ export class Angle {
   constructor({ beta, gamma }) {
     this.beta = beta;
     this.gamma = gamma;
+    this.alpha =0;
   }
 }
 
@@ -124,7 +125,7 @@ export class Wall {
 export function kinematics(angle, ball, time, walls, mapsize) {
   // console.log(angle);
   const g = -1;
-  const rebounce = 0.7;
+  const rebounce = 0.5;
   const initialPosition = [ball.position.x, ball.position.y];
   const init = ball;
 
@@ -171,7 +172,7 @@ export function collision(ball1, ball2) {
     Math.pow(ball1.position.x - ball2.position.x, 2) +
       Math.pow(ball1.position.y - ball2.position.y, 2)
   );
-  if (distance <= 1) {
+  if (distance <= 2*ball1.radius) {
     vfx =
       (ball1.mass * ball1.velocity.x + ball2.mass * ball2.velocity.x) /
       (ball1.mass + ball2.mass);
@@ -202,7 +203,7 @@ function getAboveOrBelow(ball, wall, radius) {
 
 // Math.abs(ball.position.y - wall.yStart)<=1.1*ball.radius && (ball.position.x - 1.1*ball.radius >= wall.xStart && ball.position.x + 1.1*ball.radius <= wall.xEnd)
 export function wallCollision(ball, walls, time, rebounce, initialPosition) {
-  const wallExtend = -1.08;
+  const wallExtend = -1.06;
   walls.forEach((wall) => {
     if (wall.direction === "N") {
       if (
@@ -350,6 +351,14 @@ export function generateMaze(width, height) {
     }
   });
   // console.log(maze)
+
+  const middleTop = Math.floor(height/2);
+    const middleLeft = Math.floor(width/2);
+    maze[middleTop][middleLeft].N = false;
+    maze[middleTop][middleLeft].W = false;
+    maze[middleTop][middleLeft+1].W = false;
+    maze[middleTop+1][middleLeft].N = false;
+
   return maze;
 }
 
