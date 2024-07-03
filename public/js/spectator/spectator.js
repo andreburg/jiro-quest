@@ -1,4 +1,10 @@
+import { State } from '../game/gameState.js';
+
+let GameState = undefined;
+
 document.addEventListener('DOMContentLoaded', function () {
+
+    const map = getMap();
 
     let mapCanvas = 'mapCanvas'
     let Gamecode = 'Gamecode'
@@ -95,5 +101,31 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     }
 
-    render();
+    window.requestAnimationFrame(() => {
+        render();
+    });
 });
+
+function getGameState() {
+
+    //TODO: get game state from socket
+
+    if (!GameState) {
+        GameState = new State();
+    } else {
+        GameState.updateState({
+            roundOver: false,
+            level: 1,
+            map: getMap(),
+            players: []
+        });
+    }
+
+}
+
+function getMap() {
+    //TODO: get map from server
+
+    // return map
+
+}
