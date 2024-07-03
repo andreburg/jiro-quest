@@ -119,13 +119,9 @@ const render = {
           })
       );
 
-      console.log(players);
-      console.log(confg);
-
       window.requestAnimationFrame(gameLoop(confg, players, socket));
 
       socket.on("gameStateChange", ({ game }) => {
-        console.log(game);
         gameState = { ...gameState, ...game };
         drawGame(canvas, gameState);
       });

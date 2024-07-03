@@ -26,15 +26,12 @@ const onSocketConnection = (io) => (socket) => {
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onGameStateChange = (io, socket) => (payload) => {
-  console.log(payload.game);
-
   let username;
   jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
     username = tokenData?.username;
   });
 
   const userSession = getUserSession(username);
-  sessions.set(userSession, payload.game);
   io.in(userSession).emit("gameStateChange", { game: payload.game });
 };
 
@@ -152,7 +149,6 @@ const onKickPlayer = (io, socket) => (payload) => {
   });
 
   const userSession = getUserSession(username);
-  console.log(userSession);
   const session = sessions.get(userSession);
 
   const socketId = session.players.filter(

@@ -99,10 +99,6 @@ export const gameLoop = (config, players, socket) => () => {
     );
   });
 
-  // animation frames
-  window.requestAnimationFrame(gameLoop(config, players, socket));
-
-  // storing the new state again
   const gameState = new State({
     roundOver: false,
     level: 1,
@@ -113,6 +109,8 @@ export const gameLoop = (config, players, socket) => () => {
   socket.emit("gameStateChange", {
     game: gameState,
   });
+
+  window.requestAnimationFrame(gameLoop(config, players, socket));
 };
 
 export const drawGame = (canvas, gameState) => {

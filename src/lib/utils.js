@@ -21,7 +21,7 @@ const hostProtected = (callback) => (io, socket) => (payload) => {
   });
 
   const session = sessions.get(getUserSession(username));
-  if (username === session.hostUsername) {
+  if (username === session?.hostUsername) {
     callback(io, socket)(payload);
   } else {
     socket.emit("error", {
