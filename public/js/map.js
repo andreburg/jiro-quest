@@ -30,10 +30,10 @@ function drawRectangle(canvas) {
 export function drawMaze(canvas, config) {
   const ctx = canvas.getContext("2d");
   ctx.strokeStyle = "black";
-  ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
+  ctx.shadowColor = "rgba(0, 0, 0, 1)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetX = 5;
+  ctx.shadowOffsetY = 5;
   ctx.strokeRect(
     0,
     0,
@@ -58,10 +58,10 @@ export function drawMaze(canvas, config) {
       }
     });
   });
-  ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
+  ctx.shadowColor = "rgba(0, 0, 0, 0)";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
 }
 
 //Player example
@@ -84,10 +84,10 @@ export function drawBall(player, config, canvas) {
   const ctx = canvas.getContext("2d");
   const radius = player.ball.radius * config.scale;
 
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = 4;
-    ctx.shadowOffsetY = 4;
+  ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetX = 4;
+  ctx.shadowOffsetY = 4;
 
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -98,53 +98,46 @@ export function drawBall(player, config, canvas) {
   ctx.stroke();
   ctx.lineWidth = 5;
   ctx.shadowBlur = 0;
-  ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
+  ctx.shadowColor = "rgba(0, 0, 0, 0)";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
 }
 
-export function drawGoal(canvas,config,player){
-    const x = config.mazeSize*config.scale/2;
-    const y = x;
-    const radius = player.ball.radius*config.scale;
-    const goalRadius = radius*4;
-    const mapColour = 'white'
+export function drawGoal(canvas, config, player) {
+  const x = (config.mazeSize * config.scale) / 2;
+  const y = x;
+  const radius = player.ball.radius * config.scale;
+  const goalRadius = radius * 4;
+  const mapColour = "white";
 
-    const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
-    const grd = ctx.createRadialGradient(x, y, radius*1.5, x, y, goalRadius);
-    grd.addColorStop(0, "black");
-    grd.addColorStop(1, mapColour);
+  const grd = ctx.createRadialGradient(x, y, radius * 1.5, x, y, goalRadius);
+  grd.addColorStop(0, "black");
+  grd.addColorStop(1, mapColour);
 
-    // Draw a filled Circle
-    ctx.fillStyle = grd;
+  // Draw a filled Circle
+  ctx.fillStyle = grd;
 
-    ctx.beginPath();
-    ctx.arc(x, y, goalRadius, 0, 2 * Math.PI);
-    ctx.fill();
-
+  ctx.beginPath();
+  ctx.arc(x, y, goalRadius, 0, 2 * Math.PI);
+  ctx.fill();
 }
 
 export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
-  const a = new Physics.Angle({alpha:0,beta:0,gamma:0});
+  const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;
     a.gamma = player.angles.gamma + a.gamma;
-    });
-    a.alpha = a.alpha/players.length;
-    a.beta = a.beta/players.length;
+  });
+  a.alpha = a.alpha / players.length;
+  a.beta = a.beta / players.length;
   players.forEach((player) => {
     // console.log(player.angles)
-    Physics.kinematics(
-      a,
-      player.ball,
-      0.1,
-      config.walls,
-      config.mazeSize
-    );
+    Physics.kinematics(a, player.ball, 0.1, config.walls, config.mazeSize);
   });
 
   const gameState = new State({
@@ -162,13 +155,23 @@ export const gameLoop = (config, players, socket) => () => {
 
 export const drawGame = (canvas, gameState) => {
   const { players, config } = gameState;
-  config.scale = canvas.height/config.mazeSize;
+  config.scale = canvas.height / config.mazeSize;
   const cxt = canvas.getContext("2d");
   cxt.clearRect(0, 0, canvas.width, canvas.height);
   drawMaze(canvas, config);
-  drawGoal(canvas,config,players[0])
+  drawGoal(canvas, config, players[0]);
   players.forEach((player) => drawBall(player, config, canvas));
 };
+
+let alpha, beta, gamma;
+
+let streamDeviceOrientation = setInterval(() => {
+  socket.emit("playerOrientationChange", {
+    alpha,
+    beta,
+    gamma,
+  });
+}, 50);
 
 export function initializeGyroscope(socket, startButton) {
   const addDeviceOrientationListener = () => {
@@ -176,11 +179,9 @@ export function initializeGyroscope(socket, startButton) {
     window.addEventListener(
       "deviceorientation",
       (event) => {
-        socket.emit("playerOrientationChange", {
-          alpha: event.alpha,
-          beta: event.beta,
-          gamma: event.gamma,
-        });
+        alpha = event.alpha;
+        beta = event.beta;
+        gamma = event.gamma;
       },
       true
     );
