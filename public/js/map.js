@@ -2,7 +2,7 @@ import { Player } from "./gameState.js";
 import * as Physics from "./physics/body.js";
 
 const config = {
-    mazeSize: 5,
+    mazeSize: 9,
     ballScale: 0.33,
     cellSize: 0,
     scale:100
@@ -14,11 +14,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     initializeGyroscope();
     const canvas = createUnitMapArea();
     drawRectangle(canvas);
+    config.scale = canvas.height/config.mazeSize;
     const maze = Physics.generateMaze(config.mazeSize, config.mazeSize);
-    console.log(maze)
+    // console.log(maze)
     const walls = Physics.wallCoordinates(maze);
-    console.log(walls);
-    console.log(walls);
+    config.walls = walls;
+    // console.log(walls);
+    // console.log(walls);
     drawMaze(maze,canvas,config);
     drawBall(player, config,canvas);
     gameLoop(config, maze, [player], canvas, walls);
@@ -40,7 +42,7 @@ function createUnitMapArea() {
     canvas.width = canvas.height;
     canvas.style.border = '1px solid black';
     const ctx = canvas.getContext('2d');
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 6;
     document.body.append(canvas);
     return canvas;
 }
@@ -52,37 +54,44 @@ function drawRectangle(canvas){
     ctx.strokeRect(0, 0, canvas.height, canvas.height);
 }
 
-function drawMaze(maze,canvas,config){
+function drawMaze(maze, canvas, config) {
     const ctx = canvas.getContext('2d');
     ctx.strokeStyle = 'black';
-    ctx.strokeRect(0, 0, config.mazeSize*config.scale, config.mazeSize*config.scale);
+    ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.strokeRect(0, 0, config.mazeSize * config.scale, config.mazeSize * config.scale);
     maze.forEach((row, y) => {
         row.forEach((cell, x) => {
-            const xPos = x ;
-            const yPos = y ;
-            if(cell.N){
+            const xPos = x;
+            const yPos = y;
+            if (cell.N) {
                 ctx.beginPath();
-                ctx.moveTo(xPos*config.scale, yPos*config.scale);
-                ctx.lineTo((xPos+1)*config.scale, yPos*config.scale);
+                ctx.moveTo(xPos * config.scale, yPos * config.scale);
+                ctx.lineTo((xPos + 1) * config.scale, yPos * config.scale);
                 ctx.stroke();
             }
-            if(cell.W){
+            if (cell.W) {
                 ctx.beginPath();
-                ctx.moveTo(xPos*config.scale, yPos*config.scale);
-                ctx.lineTo(xPos*config.scale, (yPos+1)*config.scale);
+                ctx.moveTo(xPos * config.scale, yPos * config.scale);
+                ctx.lineTo(xPos * config.scale, (yPos + 1) * config.scale);
                 ctx.stroke();
             }
         });
     });
-
+    ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
 }
 
 //Player example
 const player = new Player({
     username: 'player1',
     position: {
-        x: 1.5,
-        y: 1.5,
+        x: 0.5,
+        y: 0.5,
         z: 0
     },
 });
@@ -97,14 +106,46 @@ function drawBall(player, config, canvas) {
   const ctx = canvas.getContext('2d');
   const radius = player.ball.radius*config.scale
 
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 4;
+    ctx.shadowOffsetY = 4;
+
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = player.ball.colour;
   ctx.fill(); 
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   ctx.strokeStyle = "black";
   ctx.stroke();
-  ctx.lineWidth = 10;
+  ctx.lineWidth = 5;
+  ctx.shadowBlur = 0;
+  ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+}
+
+function drawGoal(canvas,config,player){
+    const x = config.mazeSize*config.scale/2;
+    const y = x;
+    const radius = player.ball.radius*config.scale;
+    const goalRadius = radius*4;
+    const mapColour = 'white'
+
+    const ctx = canvas.getContext('2d');
+
+    const grd = ctx.createRadialGradient(x, y, radius*1.5, x, y, goalRadius);
+    grd.addColorStop(0, "black");
+    grd.addColorStop(1, mapColour);
+
+    // Draw a filled Circle
+    ctx.fillStyle = grd;
+
+    ctx.beginPath();
+    ctx.arc(x, y, goalRadius, 0, 2 * Math.PI);
+    ctx.fill();
+
 }
 
 function gameLoop(config, maze, players, canvas,walls) {
@@ -112,16 +153,11 @@ function gameLoop(config, maze, players, canvas,walls) {
     const cxt = canvas.getContext('2d');
     cxt.clearRect(0, 0, canvas.width, canvas.height);
     drawMaze(maze,canvas,config);
+    drawGoal(canvas,config,players[0]);
     players.forEach(player => drawBall(player, config, canvas));
     window.requestAnimationFrame(() => gameLoop(config, maze, players, canvas,walls));
 // TODO: add gyro data
 }
-
-
-
-
-
-
 
 function initializeGyroscope() {
     const startButton = document.createElement('button');

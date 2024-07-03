@@ -125,7 +125,7 @@ export class Wall{
 export function kinematics(angle, ball, time, walls, mapsize){
     // console.log(angle);
     const g = -1
-    const rebounce = 0.7
+    const rebounce = 0.5
     const initialPosition = [ball.position.x, ball.position.y];
     const init = ball
 
@@ -185,10 +185,10 @@ function getAboveOrBelow(ball, wall, radius){
 
 // Math.abs(ball.position.y - wall.yStart)<=1.1*ball.radius && (ball.position.x - 1.1*ball.radius >= wall.xStart && ball.position.x + 1.1*ball.radius <= wall.xEnd)
 export function wallCollision(ball, walls, time, rebounce, initialPosition){
-    const wallExtend = -1.08;
+    const wallExtend = -1.06;
     walls.forEach(wall => {
         if (wall.direction === 'N'){
-            if (Math.abs(ball.position.y - wall.yStart)<=0.9*ball.radius && (ball.position.x - wallExtend*ball.radius >= wall.xStart && ball.position.x + wallExtend*ball.radius <= wall.xEnd)){
+            if (Math.abs(ball.position.y - wall.yStart)<=ball.radius && (ball.position.x - wallExtend*ball.radius >= wall.xStart && ball.position.x + wallExtend*ball.radius <= wall.xEnd)){
                 ball.velocity.y = -ball.velocity.y*rebounce;
                 ball.acceleration.y = -ball.acceleration.y;
 
@@ -204,7 +204,7 @@ export function wallCollision(ball, walls, time, rebounce, initialPosition){
             }
         }
         if (wall.direction === 'W'){
-            if (Math.abs(ball.position.x - wall.xStart)<=0.9*ball.radius && (ball.position.y - wallExtend*ball.radius >= wall.yStart && ball.position.y + wallExtend*ball.radius <= wall.yEnd)){
+            if (Math.abs(ball.position.x - wall.xStart)<=ball.radius && (ball.position.y - wallExtend*ball.radius >= wall.yStart && ball.position.y + wallExtend*ball.radius <= wall.yEnd)){
                 ball.velocity.x = -ball.velocity.x*rebounce;
                 ball.acceleration.x = -ball.acceleration.x;
 
@@ -307,7 +307,16 @@ export class Cell {
         maze[y][x][direction] = false; // Remove wall
       }
     });
+
+    const middleTop = Math.floor(height/2);
+    const middleLeft = Math.floor(width/2);
+    maze[middleTop][middleLeft].N = false;
+    maze[middleTop][middleLeft].W = false;
+    maze[middleTop][middleLeft+1].W = false;
+    maze[middleTop+1][middleLeft].N = false;
+
     // console.log(maze)
+
     return maze;
   }
   
@@ -319,16 +328,16 @@ export class Cell {
 function main() {
 
   
-    const maze = generateMaze(10,10);
-    let walls = wallCoordinates(maze);
+    // const maze = generateMaze(10,10);
+    // let walls = wallCoordinates(maze);
 
-    const ball = new Ball({mass: 1, position: {x: 0.5, y: 0.5, z: 0}, velocity: {x: 0, y: 0, z: 0}, acceleration: {x: 0, y: 0, z: 0}});
-    const angle = new Angle({beta: -30, gamma: 30});
-    for (let i = 0; i < 10; i++){
-        kinematics(angle, ball, 0.1, walls);
-        // console.log(i)
-        // console.log(ball);
-    }
+    // const ball = new Ball({mass: 1, position: {x: 0.5, y: 0.5, z: 0}, velocity: {x: 0, y: 0, z: 0}, acceleration: {x: 0, y: 0, z: 0}});
+    // const angle = new Angle({beta: -30, gamma: 30});
+    // for (let i = 0; i < 10; i++){
+    //     kinematics(angle, ball, 0.1, walls);
+    //     // console.log(i)
+    //     // console.log(ball);
+    // }
 
 
     // let ball = new Body({
