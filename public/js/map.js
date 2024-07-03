@@ -109,7 +109,6 @@ export const gameLoop = (config, players, socket) => () => {
   socket.emit("gameStateChange", {
     game: gameState,
   });
-
   window.requestAnimationFrame(gameLoop(config, players, socket));
 };
 
@@ -121,7 +120,7 @@ export const drawGame = (canvas, gameState) => {
   players.forEach((player) => drawBall(player, config, canvas));
 };
 
-export function initializeGyroscope() {
+export function initializeGyroscope(socket) {
   const startButton = document.createElement("button");
   startButton.id = "start";
   startButton.innerHTML = "Start";
@@ -131,16 +130,9 @@ export function initializeGyroscope() {
     window.addEventListener(
       "deviceorientation",
       (event) => {
-        const absolute = event.absolute;
-        const alpha = event.alpha;
-        const beta = event.beta;
-        const gamma = event.gamma;
-        // Do stuff with the new orientation data
-        player.angles = {
-          alpha,
-          beta,
-          gamma,
-        };
+        socket.emit("playerOrientationChange", {
+          event,
+        });
       },
       true
     );

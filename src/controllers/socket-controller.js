@@ -16,12 +16,30 @@ const onSocketConnection = (io) => (socket) => {
     kickPlayer: hostProtected(onKickPlayer),
     sessionStateChange: hostProtected(onSessionStateChange),
     gameStateChange: hostProtected(onGameStateChange),
+
+    // Player Actions
+    playerOrientationChange: onPlayerOrientationChange,
   };
 
   for (let key in socketRouter) {
     let func = socketRouter[key];
     socket.on(key, func(io, socket));
   }
+};
+
+/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
+const onPlayerOrientationChange = (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const userSession = getUserSession(username);
+
+  io.in(userSession).emit("playerOrientationChange", {
+    username,
+    event: payload.event,
+  });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */

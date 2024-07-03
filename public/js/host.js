@@ -107,7 +107,7 @@ const render = {
 
       const mapArea = document.querySelector("#unit-map-area");
 
-      initializeGyroscope();
+      initializeGyroscope(socket);
       const canvas = createUnitMapArea(mapArea);
       config.mazeSize;
 
@@ -124,6 +124,14 @@ const render = {
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
         drawGame(canvas, gameState);
+      });
+
+      socket.on("playerOrientationChange", ({ username, event }) => {
+        players.find((player) => player.username === username)[0].angles = {
+          alpha: event.alpha,
+          gamma: event.gamma,
+          beta: event.beta,
+        };
       });
     },
   },
