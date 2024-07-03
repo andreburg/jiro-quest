@@ -19,7 +19,16 @@ const getGamePage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/player/game.html"));
 };
 
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+const getSpectatorPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/spectator/index.html"));
+};
+
 module.exports = {
   getHomePage,
   getGamePage,
+  getSpectatorPage
 };
