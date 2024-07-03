@@ -126,31 +126,33 @@ export function drawGoal(canvas, config, player) {
 }
 
 export const gameLoop = (config, players, socket) => () => {
-  // updating physical state in memory
-  const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
-  players.forEach((player) => {
-    a.alpha = player.angles.alpha + a.alpha;
-    a.beta = player.angles.beta + a.beta;
-    a.gamma = player.angles.gamma + a.gamma;
-  });
-  a.alpha = a.alpha / players.length;
-  a.beta = a.beta / players.length;
-  players.forEach((player) => {
-    // console.log(player.angles)
-    Physics.kinematics(a, player.ball, 0.1, config.walls, config.mazeSize);
-  });
+  let computationInverval = setInterval(() => {
+    // updating physical state in memory
+    const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
+    players.forEach((player) => {
+      a.alpha = player.angles.alpha + a.alpha;
+      a.beta = player.angles.beta + a.beta;
+      a.gamma = player.angles.gamma + a.gamma;
+    });
+    a.alpha = a.alpha / players.length;
+    a.beta = a.beta / players.length;
+    players.forEach((player) => {
+      // console.log(player.angles)
+      Physics.kinematics(a, player.ball, 0.1, config.walls, config.mazeSize);
+    });
 
-  const gameState = new State({
-    roundOver: false,
-    level: 1,
-    players,
-    config,
-  });
+    const gameState = new State({
+      roundOver: false,
+      level: 1,
+      players,
+      config,
+    });
 
-  socket.emit("gameStateChange", {
-    game: gameState,
-  });
-  window.requestAnimationFrame(gameLoop(config, players, socket));
+    socket.emit("gameStateChange", {
+      game: gameState,
+    });
+    window.requestAnimationFrame(gameLoop(config, players, socket));
+  }, 100);
 };
 
 export const drawGame = (canvas, gameState) => {

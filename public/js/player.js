@@ -105,7 +105,7 @@ const render = {
 
       let streamDeviceOrientation = setInterval(() => {
         socket.emit("playerOrientationChange", angles);
-      }, 50);
+      }, 100);
     },
   },
 };
