@@ -302,6 +302,7 @@ button {
     max-width: 80vw;
     min-height: 3rem;
     background-color: var(--tropical-indigo);
+    color: black;
 }
 
 button:active {
@@ -311,6 +312,16 @@ button:active {
 h1 {
     font-size: 2rem;
     font-weight: 800;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+  text-decoration: none;
 }
 
 .center-div {
@@ -523,6 +534,21 @@ div > h2 {
   margin: 0;
 }
 
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  overflow: auto;
+}
+
+table td, table th {
+  border-bottom: var(--border-thin-gray);
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: black;
+}
+
 .game-stats-table {
   width: 100%;
   text-align: left;
@@ -712,6 +738,7 @@ div > h2 {
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
+  padding: 2rem;
 }
 
 .join-prompt > h1 {
@@ -740,4 +767,87 @@ div > h2 {
           drop-shadow(0 0 0px var(--black));
 
 
+}
+
+.host-page-container > img:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  width: 6rem;
+  height: 6rem;
+
+  z-index: 1;
+  -webkit-filter: drop-shadow(2px 2px 0 black)
+                drop-shadow(-2px 2px 0 black)
+                drop-shadow(2px -2px 0 black)
+                drop-shadow(-2px -2px 0 black)
+                drop-shadow(0 0 0px black);
+
+  filter: drop-shadow(2px 2px 0 black)
+          drop-shadow(-2px 2px 0 black)
+          drop-shadow(2px -2px 0 black)
+          drop-shadow(-2px -2px 0 black)
+          drop-shadow(0 0 0px black);
+
+  rotate: 1turn;
+
+  /* bounce up and down infinitely */
+  -webkit-animation: spin 15s infinite;
+  -moz-animation: spin 15s infinite;
+  -o-animation: spin 15s infinite;
+  animation: spin 15s infinite;
+}
+
+.right-aligned-button-group {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.lobby-player-list-container {
+  width: 100%;
+}
+
+.lobby-player-list-item {
+  background-color: var(--container-background-primary);
+  box-shadow: var(--box-shadow-medium);
+  border: var(--border-thick);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  overflow: auto;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lobby-player-list-item-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.lobby-player-list-item-username {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.kick-player-button {
+  width: 3rem;
+  height: 3rem;
+}
+
+.kick-player-button > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ready {
+  background-color: var(--neon-blue);
 }

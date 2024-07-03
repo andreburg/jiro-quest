@@ -38,47 +38,43 @@ const render = {
   lobby: {
     load: () => {
       document.querySelector("#app").innerHTML = `
-      <div class="center-div">
+      <div class="center-div host-page-container">
+            <img src="/public/assets/brutalism/Brutalist 79.png" alt="random illustration" />
+            <div class="join-prompt">
               <h1>Waiting For Players...</h1>
-              <table class="table">
-                  <thead>
-                      <tr>
-                          <th>#</th>
-                          <th>Username</th>
-                           <th>Ready</th>
+            </div>
+              <div class="lobby-player-list-container">
+                      ${sessionState.players
+          .map((player, i) => {
 
-                      </tr>
-                  </thead>
-                  <tbody>
-                    ${sessionState.players
-                      .map((player, i) => {
-                        return `
-                        <tr>
-                          <td>${i + 1}</td>
-                          <td>${player.username}</td>
-                          <td>${player.ready}</td>
+            return `
+                            <div class="lobby-player-list-item ${player.ready ? "ready" : ""}">
+                              <div class="lobby-player-list-item-vertical">
+                                <div class="lobby-player-list-item-username">
+                                  ${player.username}
+                                </div>
+                                <div class="lobby-player-list-item-ready">
+                                  ${player.ready ? "Ready" : "Not Ready"}
+                                </div>
+                              </div>
+                              ${player.username !== sessionState.hostUsername
+                ? `                         
+                            <div class="kick-player-button" id="kick-player-button-${player.username}">
+                              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="9" cy="9" r="8.5" fill="#FF6B6B" stroke="black"/>
+                                <line x1="6" y1="9" x2="12" y2="9" stroke="black" stroke-width="2"/>
+                              </svg>
+                            </div>`
+                : ""
+              }
+                          </div>
 
-                          <td>
-                      ${
-                        player.username !== sessionState.hostUsername
-                          ? `                         <div class="kick-player-button" id="kick-player-button-${player.username}">
-                          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="9" cy="9" r="8.5" fill="#FF6B6B" stroke="black"/>
-<line x1="6" y1="9" x2="12" y2="9" stroke="black" stroke-width="2"/>
-</svg>
-                          </div>`
-                          : ""
-                      }
-              
-                          </td>
-                      </tr>
-                        `;
-                      })
-                      .join("")}
-                  </tbody>
-              </table>
-              <div>
-                  <button class="button button-danger button-medium" onclick={}>Exit</button>
+                          `;
+          })}
+              </div>
+
+              <div class="right-aligned-button-group">
+                  <button class="button-danger" onclick={}>Exit</button>
                   ${
                     sessionState.players.find(
                       (player) => player.socketId === socket.id
@@ -88,16 +84,16 @@ const render = {
                                   <button id="readyButton">Ready Up</button>
                                   `
                   }
+                  ${
+        sessionState.players.every((player) => player.ready)
+          ? `
+                    <div>
+                      <button class="" id="start-game-button">Start</button>
+                    </div>
+                    `
+        : ""
+                  }
               </div>
-              ${
-                sessionState.players.every((player) => player.ready)
-                  ? `
-                <div>
-                  <button class="button button-success button-medium" id="start-game-button">Start</button>
-                </div>
-                `
-                  : ""
-              }
           </div>
       `;
       document.querySelectorAll(".kick-player-button").forEach((kickButton) => {
