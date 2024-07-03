@@ -11,35 +11,38 @@
     <title>Enter Lobby</title>
   </head>
   <body>
-    <div class="center-div">
-      <h1>Enter Lobby</h1>
+    <main class="center-div signin-page-container">
+      <img src="/public/assets/brutalism/Brutalist 82.png" alt="random-icon" />
+      <img src="/public/assets/brutalism/Brutalist 79.png" alt="random-icon" />
+      <div class="logo-container-sign-in-page">
+        <h1>Join Lobby</h1>
+      </div>
       <div>
-        <h3 class="label">Session ID</h3>
-        <input
-          class="input input-large"
-          placeholder="Lobby Code"
-          id="sessionId"
-        />
+          <input
+            placeholder="Lobby Code"
+            id="sessionId"
+            class="input input-large"
+          />
       </div>
 
-      <div style="display: flex; gap: 1rem; margin-top: 1rem">
-        <a href="/">
-          <button class="button button-danger button-medium">Leave</button>
-        </a>
-        <button id="joinButton" class="button button-primary button-medium">
+      <div class="right-aligned-button-group">
+        <button id="joinButton" class="">
           Join
         </button>
+        <a href="/">
+          <button class="button-danger">Leave</button>
+          </a>
       </div>
-    </div>
-    <script>
-      function joinGame() {
-        const sessionId = document.getElementById("sessionId")?.value;
-        if (sessionId) {
-          window.location.pathname = `/lobby/${sessionId}`;
+      <script>
+        function joinGame() {
+          const sessionId = document.getElementById("sessionId")?.value;
+          if (sessionId) {
+            window.location.pathname = `/lobby/${sessionId}`;
+          }
         }
-      }
 
-      document.getElementById("joinButton").addEventListener("click", joinGame);
-    </script>
+                      document.getElementById("joinButton").addEventListener("click", joinGame);
+                    </script>
+    </main>
   </body>
 </html>

@@ -55,7 +55,6 @@ const render = {
           })}
               </div>
               <div class="right-aligned-button-group">
-                  <button class="button-danger" onclick={}>Exit</button>
                   ${
                     sessionState.players.find(
                       (player) => player.socketId === socket.id
@@ -64,7 +63,8 @@ const render = {
                       : `
                                   <button id="readyButton">Ready Up</button>
                                   `
-                  }              
+                  }  
+                  <button class="button-danger" onclick={}>Exit</button>
               </div>
           </div>
       `;

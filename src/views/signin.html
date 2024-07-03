@@ -21,9 +21,21 @@
           class="input input-large"
           id="username"
           name="username"
+          required
         />
         <button type="submit">Confirm</button>
       </form>
     </main>
+<script>
+  const input = document.getElementById('username');
+  input.addEventListener('onchange', (e) => {
+    if (input.validity.valid) {
+
+    } else {
+      input.setCustomValidity('Please enter a username');
+    }
+  });
+
+</script>
   </body>
 </html>
