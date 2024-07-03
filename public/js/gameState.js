@@ -70,6 +70,8 @@ export class Player {
       radius: 0.1,
       colour: generateRandomColorString(),
     });
+    this.score = 0;
+    this.angleWeight = 1;
   }
 }
 function generateRandomColorString() {

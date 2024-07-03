@@ -7,6 +7,7 @@ export const config = (mazeSize) => ({
   cellSize: 0,
   scale: 100,
   maze: Physics.generateMaze(mazeSize, mazeSize),
+  score: 3,
 });
 
 export function createUnitMapArea(htmlElement) {
@@ -138,9 +139,9 @@ export const gameLoop = (config, players, socket) => () => {
   a.alpha = a.alpha / players.length;
   a.beta = a.beta / players.length;
     players.forEach((player) => {
-        player.angles.alpha = angleW*a.alpha+(1-angleW)*player.angles.alpha
-        player.angles.beta = angleW*a.beta+(1-angleW)*player.angles.beta
-        player.angles.gamma = angleW*a.gamma+(1-angleW)*player.angles.gamma
+        player.angles.alpha = (angleW*a.alpha+(1-angleW)*player.angles.alpha)*player.angleWeight;
+        player.angles.beta = (angleW*a.beta+(1-angleW)*player.angles.beta)*player.angleWeight;
+        player.angles.gamma = (angleW*a.gamma+(1-angleW)*player.angles.gamma)*player.angleWeight;
     });
   players.forEach((player) => {
     // console.log(player.angles)
@@ -154,7 +155,11 @@ export const gameLoop = (config, players, socket) => () => {
 //     players.forEach((otherPlayer) => {
 //         Physics.collision(player.ball, otherPlayer.ball, time, config.mazeSize);
 //   })
-});
+}
+
+
+);
+Physics.endGame(players, config);
 
   const gameState = new State({
     roundOver: false,
@@ -176,7 +181,7 @@ export const drawGame = (canvas, gameState) => {
   cxt.clearRect(0, 0, canvas.width, canvas.height);
   drawMaze(canvas, config);
   drawGoal(canvas, config, players[0]);
-  players.forEach((player) => drawBall(player, config, canvas));
+  players.forEach((player) => {if(player.angleWeight===1){drawBall(player, config, canvas)}});
 };
 
 export const angles = {

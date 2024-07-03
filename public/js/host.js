@@ -1,12 +1,21 @@
 import { Player } from "./gameState.js";
+// import {
+//   config,
+//   createUnitMapArea,
+//   drawGame,
+//   drawMaze,
+//   gameLoop,
+//   initializeGyroscope,
+// } from "./map.js";
 import {
+  angles,
   config,
   createUnitMapArea,
   drawGame,
   drawMaze,
   gameLoop,
   initializeGyroscope,
-} from "./map.js";
+} from "./map.js";
 import { socket } from "./socket.js";
 import * as Physics from "./physics/body.js";
 
