@@ -1,5 +1,6 @@
 import { Player } from "./gameState.js";
 import {
+  angles,
   config,
   createUnitMapArea,
   drawGame,
