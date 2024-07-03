@@ -268,7 +268,8 @@
 
 body {
     max-width: 100%;
-    height: calc(100vh - 5rem);
+    height: calc(100vh - 8rem);
+    height: calc(-webkit-fill-available - 4rem);
     padding: 2rem;
     font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
     background-color: var(--page-background);
@@ -584,8 +585,8 @@ div > h2 {
 }
 
 .logo-container-sign-in-page > img {
-  width: 75%;
   height: 75%;
+  width: auto;
 }
 
 
