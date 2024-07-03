@@ -1,24 +1,19 @@
 const { Socket, Server: SocketServer } = require("socket.io");
 const { generateUID, hostProtected, JWT_SECRET } = require("../lib/utils");
 const { sessions, getUserSession } = require("../lib/sessions");
-const { users, getUsername } = require("../lib/users");
 const jwt = require("jsonwebtoken");
 
 /** @param {SocketServer} io @returns {(socket: Socket) => void} */
 const onSocketConnection = (io) => (socket) => {
   const socketRouter = {
     // Session Actions
-    createSession: onCreateSession,
     endSession: hostProtected(onEndSession),
     joinSession: onJoinSession,
     leaveSession: onLeaveSession,
+    disconnect: onPlayerDisconnect,
 
     // Host Actions
-    kickSocket: hostProtected(onKickSocket),
-
-    // Client Actions
-    auth: onAuth,
-    signIn: onSignIn,
+    kickPlayer: hostProtected(onKickPlayer),
   };
 
   for (let key in socketRouter) {
@@ -28,51 +23,29 @@ const onSocketConnection = (io) => (socket) => {
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onSignIn = (io, socket) => (payload) => {
-  if (users.has(payload.username)) {
-    socket.emit("error", {
-      message: "Username already taken.",
-    });
-    return;
-  } else {
-    users.set(payload.username, null);
-    socket.emit("authorized", jwt.sign(payload.username, JWT_SECRET));
-    console.log(payload.username);
-  }
-};
+const onPlayerDisconnect = (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
 
-/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onAuth = (io, socket) => (payload) => {
-  jwt.verify(payload.token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      socket.emit("authorized", {
-        error: "Unauthorized",
-      });
+  const userSession = getUserSession(username);
+  const session = sessions.get(userSession);
+
+  console.log("disconnected");
+  if (session) {
+    if (session?.hostUsername === username) {
+      io.in(userSession).emit("disconnected", {});
+      io.in(userSession).disconnectSockets();
+      sessions.delete(userSession);
     } else {
-      users.set(decoded, socket.id);
-      socket.emit("authorized", {
-        data: {
-          username: decoded,
-        },
-      });
-      const username = new Array(users.entries()).find(
-        ([key, value]) => value === socket.id
+      session.players = session.players.filter(
+        (player) => player.username !== username
       );
-      console.log(username);
-    }
-  });
-};
 
-/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onCreateSession = (io, socket) => (payload) => {
-  const sessionId = generateUID();
-  socket.join(sessionId);
-  sessions.set(sessionId, {
-    hostUsername: socket.id,
-    sessionName: payload.sessionName,
-    status: "lobby",
-    playerUsernames: [],
-  });
+      io.in(userSession).emit("sessionStateChange", { session });
+    }
+  }
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
@@ -83,7 +56,10 @@ const onEndSession = (io, socket) => (payload) => {
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onJoinSession = (io, socket) => (payload) => {
-  const username = getUsername(socket.id);
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
 
   const session = sessions.get(payload.sessionId);
   if (!session) {
@@ -100,7 +76,7 @@ const onJoinSession = (io, socket) => (payload) => {
     return;
   }
 
-  if (session.sockets.length >= 4) {
+  if (session.players.length >= 4) {
     socket.emit("error", {
       message: "Unable to join full session.",
     });
@@ -108,62 +84,62 @@ const onJoinSession = (io, socket) => (payload) => {
   }
 
   socket.join(payload.sessionId);
-  session.playerUsernames.push(username);
-  io.to(payload.code).emit("playerJoined", {
-    username,
-  });
+
+  let newPlayer = { socketId: socket.id, username: username };
+
+  session.players = [
+    ...session.players.filter(
+      (player) => player.username !== newPlayer.username
+    ),
+    newPlayer,
+  ];
+
+  io.in(payload.sessionId).emit("sessionStateChange", { session });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onLeaveSession = (io, socket) => (payload) => {
-  const username = getUsername(socket.id);
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
   const userSession = getUserSession(username);
-  const currentSession = sessions.get(userSession);
+  const session = sessions.get(userSession);
+
+  session.players = session.players.filter(
+    (player) => player.username != username
+  );
 
   socket.leave(userSession);
-  sessions.set(userSession, {
-    ...currentSession,
-    playerUsernames: currentSession.playerUsernames.filter(
-      (u) => u !== username
-    ),
-  });
 
-  const socketIndex = session.sockets.find(
-    (socketId) => socketId === socket.id
-  );
-  if (socketIndex != -1) {
-    session.sockets = session.sockets.splice(socketIndex);
-  } else {
-    socket.emit("Error", {
-      message: "Not a member of the session.",
-    });
-  }
-  io.to(payload.sessionId).emit("playerLeft", {
-    socketId: socket.id,
-  });
+  socket.emit("sessionStateChange", { session });
   socket.disconnect();
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
-const onKickSocket = (io, socket) => (payload) => {
-  const session = sessions.get(payload.sessionId);
-  const socketToKick = io.sockets.sockets.get(payload.socketId);
-  socketToKick.leave(payload.sessionId);
-  const socketIndex = session.sockets.find(
-    (socketId) => socketId === socketToKick.id
-  );
-  if (socketIndex != -1) {
-    session.sockets = session.sockets.splice(socketIndex);
-  } else {
-    socket.emit("Error", {
-      message: "Not a member of the session.",
-    });
-  }
-  io.to(payload.sessionId).emit("playerLeft", {
-    socketId: socket.id,
+const onKickPlayer = (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
   });
-  socket.disconnect();
-  io.sockets.sockets.get(payload.socketId).disconnect();
+
+  const userSession = getUserSession(username);
+  console.log(userSession);
+  const session = sessions.get(userSession);
+
+  const socketId = session.players.filter(
+    (player) => player.username === payload.username
+  )[0]?.socketId;
+
+  if (socketId) {
+    const socketToKick = io.sockets.sockets.get(socketId);
+    socketToKick.emit("disconnected", {});
+    socketToKick.leave(userSession);
+    session.players = session.players.filter(
+      (p) => p.username !== payload.username
+    );
+    socket.emit("sessionStateChange", { session });
+  }
 };
 
 module.exports = {

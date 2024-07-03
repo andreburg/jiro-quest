@@ -1,8 +1,12 @@
 const { Server: SocketServer, Socket } = require("socket.io");
-const sessions = require("./sessions");
+const { sessions, getUserSession } = require("./sessions.js");
+const { getUsername } = require("./users.js");
+const jwt = require("jsonwebtoken");
 
 const generateUID = () => {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  return new String(
+    Date.now().toString(36) + Math.random().toString(36)
+  ).substr(2, 7);
 };
 
 /**
@@ -11,8 +15,13 @@ const generateUID = () => {
  * @param {Socket} socket
  */
 const hostProtected = (callback) => (io, socket) => (payload) => {
-  const session = sessions.get(payload.sessionId);
-  if (socket.id === session.hostSocketId) {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const session = sessions.get(getUserSession(username));
+  if (username === session.hostUsername) {
     callback(io, socket)(payload);
   } else {
     socket.emit("error", {

@@ -1,22 +1,22 @@
 const {
   getHomePage,
   getJoinPage,
-  getCreatePage,
+  createSession,
   getSignInPage,
+  signInUser,
+  joinSession,
 } = require("../controllers/index-controller");
-const { users } = require("../lib/users");
-const { hostRouter } = require("./host-router");
-const { playerRouter } = require("./player-router");
+const { verifyToken } = require("../middleware/cookie");
 const jwt = require("jsonwebtoken");
 const indexRouter = require("express").Router();
 
+indexRouter.use(verifyToken);
 indexRouter.get("/", getHomePage);
-indexRouter.get("/create", getJoinPage);
-indexRouter.get("/join", getCreatePage);
+indexRouter.get("/create", createSession);
+indexRouter.get("/join", getJoinPage);
 indexRouter.get("/signin", getSignInPage);
-
-indexRouter.use("/host", hostRouter);
-indexRouter.use("/player", playerRouter);
+indexRouter.post("/signin", signInUser);
+indexRouter.get("/lobby/:sessionId", joinSession);
 
 module.exports = {
   indexRouter,

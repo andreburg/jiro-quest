@@ -1,9 +1,9 @@
-/** @type {Map<string, { hostUsername: string, sessionName: string, status: string, playerUsernames: [string] }>} */
+/** @type {Map<string, { hostUsername: string, status: string, round: int, players: [{socketId: string, username: string, score: number, coordinates: {x: number, y: number}}] }>} */
 let sessions = new Map();
 
 const getUserSession = (username) => {
-  for (const [key, value] of users.entries()) {
-    if (value.playerUsernames.includes(username)) {
+  for (const [key, value] of sessions.entries()) {
+    if (value.players.map((p) => p.username).includes(username)) {
       return key;
     }
   }

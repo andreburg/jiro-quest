@@ -3,23 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Join Lobby</title>
     <link rel="stylesheet" href="/public/css/globals.css" />
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/js/socket.js" type="module"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
     </style>
+    <title>Enter Lobby</title>
   </head>
-
   <body>
-    <main class="center-div">
+    <div class="center-div">
       <h1>Enter Lobby</h1>
-      <input
-        type="text"
-        placeholder="Lobby Code"
-        class="input input-large"
-        id="sessionId"
-      />
-    </main>
+      <div>
+        <h3 class="label">Session ID</h3>
+        <input
+          class="input input-large"
+          placeholder="Lobby Code"
+          id="sessionId"
+        />
+      </div>
+
+      <div style="display: flex; gap: 1rem; margin-top: 1rem">
+        <a href="/">
+          <button class="button button-danger button-medium">Leave</button>
+        </a>
+        <button id="joinButton" class="button button-primary button-medium">
+          Join
+        </button>
+      </div>
+    </div>
+    <script>
+      function joinGame() {
+        const sessionId = document.getElementById("sessionId")?.value;
+        if (sessionId) {
+          window.location.pathname = `/lobby/${sessionId}`;
+        }
+      }
+
+      document.getElementById("joinButton").addEventListener("click", joinGame);
+    </script>
   </body>
 </html>
