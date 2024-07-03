@@ -1,4 +1,4 @@
-import { Player } from "./gameState.js";
+import State, { Player } from "./gameState.js";
 import * as Physics from "./physics/body.js";
 
 const config = {
@@ -6,7 +6,7 @@ const config = {
     ballScale: 0.33,
     cellSize: 0,
     scale:100
-  }
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
   
@@ -52,7 +52,7 @@ function drawRectangle(canvas){
     ctx.strokeRect(0, 0, canvas.height, canvas.height);
 }
 
-function drawMaze(maze,canvas,config){
+export function drawMaze(maze, canvas, config) {
     const ctx = canvas.getContext('2d');
     ctx.strokeStyle = 'black';
     ctx.strokeRect(0, 0, config.mazeSize*config.scale, config.mazeSize*config.scale);
@@ -87,7 +87,7 @@ const player = new Player({
     },
 });
 
-function drawBall(player, config, canvas) {
+export function drawBall(player, config, canvas) {
 //   const canvas = document.getElementById('gameCanvas');
   const x = player.ball.position.x*config.scale;
   const y = player.ball.position.y*config.scale;
@@ -114,7 +114,14 @@ function gameLoop(config, maze, players, canvas,walls) {
     drawMaze(maze,canvas,config);
     players.forEach(player => drawBall(player, config, canvas));
     window.requestAnimationFrame(() => gameLoop(config, maze, players, canvas,walls));
-// TODO: add gyro data
+  const gameState = new State({
+    roundOver: false,
+    level: 1,
+    map: maze,
+    players: players,
+    config: { ...config, walls }
+  });
+  console.log(JSON.stringify(gameState));
 }
 
 

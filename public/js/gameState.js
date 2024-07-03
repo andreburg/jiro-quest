@@ -2,15 +2,21 @@ import { Vector, Ball } from "./physics/body.js";
 
 export default class State {
     constructor({
-        roundOver = false,
-        level = 1,
+        roundOver,
+        level,
         map,
-        players: [],
+        players,
+        config
     }) {
-        this.roundOver = roundOver;
-        this.level = level;
+        this.roundOver = roundOver ?? false
+        this.level = level ?? 1
         this.map = map;
-        this.players = players;
+        this.players = players ?? []
+        this.config = config ?? {
+            mazeSize: 5,
+            scale: 100,
+            walls: []
+        }
     }
 
     addPlayer(player) {

@@ -1,12 +1,34 @@
-import { State } from '../game/gameState.js';
+import State, { Player } from '../gameState.js';
+import { generateMaze, wallCoordinates, kinematics } from '../physics/body.js';
+import { drawMaze, drawBall } from '../map.js';
 
-let GameState = undefined;
+
+let socketSimulator = undefined;
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const map = getMap();
+    socketSimulator = new SocketSimulator();
 
-    let mapCanvas = 'mapCanvas'
+    let socketResponse = getSocketResponse();
+
+    const map = getMaze();
+    let GameState = new State({
+        roundOver: false,
+        level: 1,
+        map: map,
+        players: getPlayers(socketResponse),
+        config: {
+            mazeSize: 5,
+            scale: 100,
+            walls: wallCoordinates(map)
+        }
+    });
+    GameState = updateGameState(GameState);
+
+    let mapCanvas = getUnitMapArea();
+    drawMaze(GameState.map, mapCanvas, GameState.config);
+
+
     let Gamecode = 'Gamecode'
     let qrcode = 'qrcode'
     let number = 'number'
@@ -18,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let hostUsername = 'hostUsername'
 
 
+
     const render = () => {
         const app = document.getElementById('app');
         app.innerHTML = `
@@ -26,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
     </header>
     <main class="spectator-main-container">
         <section class="spectator-map-container">
-            ${mapCanvas}
         </section>
         <section class="spectator-game-stats-container">
             <div class="spectator-game-stats-header-container">
@@ -99,33 +121,117 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
     </main >
         `;
+
+        const spectatorMapContainer = document.querySelector('.spectator-map-container');
+        spectatorMapContainer.appendChild(mapCanvas);
+        spectatorMapContainer.style.width = mapCanvas.width + 'px';
+        spectatorMapContainer.style.height = mapCanvas.height + 'px';
     }
 
     window.requestAnimationFrame(() => {
+        //TODO: remove this line
+        socketSimulator.runPhysics(GameState);
+        GameState = updateGameState(GameState);
+        GameState.players.forEach(player => {
+            drawBall(player, GameState.config, mapCanvas);
+        });
         render();
     });
 });
 
-function getGameState() {
-
-    //TODO: get game state from socket
-
-    if (!GameState) {
-        GameState = new State();
-    } else {
-        GameState.updateState({
-            roundOver: false,
-            level: 1,
-            map: getMap(),
-            players: []
-        });
-    }
+function getSocketResponse() {
 
 }
 
-function getMap() {
+function updateGameState(currentState, socketResponse) {
+
+    //TODO: get game state from socket
+    let newState = currentState
+
+    //TODO: update game state
+    newState.updateState({
+        roundOver: false,
+        level: 1,
+        map: currentState.map,
+        players: getPlayers(socketResponse),
+
+    })
+
+
+    return newState;
+
+}
+
+function getPlayers(socketResponse) {
+    // TODO: get players from server using socketResponse
+    const players = socketSimulator.getPlayers();
+
+    return players;
+}
+
+function getMaze() {
     //TODO: get map from server
-
+    const maze = socketSimulator.getMaze();
     // return map
+    return maze;
 
+}
+
+function getUnitMapArea() {
+    const canvas = document.createElement('canvas');
+    const mapContainer = document.querySelector('.spectator-map-container');
+    canvas.id = 'gameCanvas';
+    canvas.height = mapContainer ? mapContainer.clientHeight : window.innerHeight * 0.9;
+    canvas.width = mapContainer ? mapContainer.clientWidth : window.innerWidth * 0.5;
+    const ctx = canvas.getContext('2d');
+    ctx.lineWidth = 10;
+    return canvas;
+}
+
+class SocketSimulator {
+    constructor() {
+    }
+
+    runPhysics(gameState) {
+        gameState.players.forEach(player => {
+            kinematics(player.angles, player.ball, 0.1, gameState.config.walls, gameState.config.scale);
+        })
+    }
+
+    getMaze() {
+        return generateMaze(5, 5);
+    }
+
+    getPlayers() {
+        return [
+            new Player({
+                username: 'player1',
+                position: {
+                    x: 0.5,
+                    y: 0.5
+                }
+            }),
+            new Player({
+                username: 'player2',
+                position: {
+                    x: 1.5,
+                    y: 0.5
+                }
+            }),
+            new Player({
+                username: 'player3',
+                position: {
+                    x: 2.5,
+                    y: 0.5
+                }
+            }),
+            new Player({
+                username: 'player4',
+                position: {
+                    x: 1.5,
+                    y: 1.5
+                }
+            }),
+        ];
+    }
 }
