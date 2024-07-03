@@ -46,7 +46,7 @@ const joinSession = async (req, res) => {
       path.join(__dirname, `../views/${isHost ? "host" : "player"}/lobby.html`)
     );
   } else {
-    res.status(404).send("Lobby not found");
+    res.sendFile(path.join(__dirname, "../views/errors/lobby-not-found.html"));
   }
 };
 

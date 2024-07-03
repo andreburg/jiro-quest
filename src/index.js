@@ -38,6 +38,10 @@ app.use(cors());
 app.use(indexRouter);
 app.use("/public", express.static(path.join(__dirname, "../public/")));
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./views/errors/not-found.html"));
+});
+
 io.on("connection", onSocketConnection(io));
 
 server.listen(PORT, () => {
