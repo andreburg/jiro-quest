@@ -851,3 +851,11 @@ table td, table th {
 .ready {
   background-color: var(--neon-blue);
 }
+
+.join-screen {
+  width: 100%;
+}
+
+.join-screen > * {
+  width: 85%;
+}
