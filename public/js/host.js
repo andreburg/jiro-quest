@@ -1,10 +1,9 @@
 import { socket } from "./socket.js";
 
 let sessionState;
-
-socket.on("disconnected", ({ session }) => {
-  window.location.pathname = "/join";
-});
+const kickPlayer = (username) => {
+  socket.emit("kickPlayer", { username });
+};
 
 socket.on("sessionStateChange", ({ session }) => {
   console.log(session);
@@ -20,7 +19,7 @@ const render = {
     load: () => {
       document.querySelector("#app").innerHTML = `
       <div class="center-div">
-              <h1>Waiting For Host...</h1>
+              <h1>Waiting For Players...</h1>
               <table class="table">
                   <thead>
                       <tr>
@@ -35,6 +34,19 @@ const render = {
                         <tr>
                           <td>${i + 1}</td>
                           <td>${player.username}</td>
+                          <td>
+                      ${
+                        player.username !== sessionState.hostUsername
+                          ? `                         <div class="kick-player-button" id="kick-player-button-${player.username}">
+                          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="9" cy="9" r="8.5" fill="#FF6B6B" stroke="black"/>
+<line x1="6" y1="9" x2="12" y2="9" stroke="black" stroke-width="2"/>
+</svg>
+                          </div>`
+                          : ""
+                      }
+              
+                          </td>
                       </tr>
                         `;
                       })
@@ -42,10 +54,17 @@ const render = {
                   </tbody>
               </table>
               <div>
-                  <button class="button button-danger button-medium" onclick={}>Leave</button>
+                  <button class="button button-danger button-medium" onclick={}>Exit</button>
+                  <button class="button button-success button-medium">Start</button>
               </div>
           </div>
       `;
+
+      document.querySelectorAll(".kick-player-button").forEach((kickButton) => {
+        kickButton.addEventListener("click", () => {
+          kickPlayer(kickButton.id.split("-")[3]);
+        });
+      });
     },
     hidrate: () => {
       document.querySelector("#app").innerHTML = `
