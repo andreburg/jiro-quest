@@ -130,7 +130,7 @@ const render = {
   },
   round: {
     load: () => {
-      const confg = config(5);
+      const confg = config(11);
       let walls = Physics.wallCoordinates(confg.maze);
       confg.walls = walls;
 
