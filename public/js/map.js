@@ -163,15 +163,11 @@ export const drawGame = (canvas, gameState) => {
   players.forEach((player) => drawBall(player, config, canvas));
 };
 
-let alpha, beta, gamma;
-
-let streamDeviceOrientation = setInterval(() => {
-  socket.emit("playerOrientationChange", {
-    alpha,
-    beta,
-    gamma,
-  });
-}, 50);
+export const angles = {
+  alpha,
+  beta,
+  gamma,
+};
 
 export function initializeGyroscope(socket, startButton) {
   const addDeviceOrientationListener = () => {
@@ -179,9 +175,9 @@ export function initializeGyroscope(socket, startButton) {
     window.addEventListener(
       "deviceorientation",
       (event) => {
-        alpha = event.alpha;
-        beta = event.beta;
-        gamma = event.gamma;
+        angles.alpha = event.alpha;
+        angles.beta = event.beta;
+        angles.gamma = event.gamma;
       },
       true
     );

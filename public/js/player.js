@@ -1,5 +1,6 @@
 import { Player } from "./gameState.js";
 import {
+  angles,
   config,
   createUnitMapArea,
   drawGame,
@@ -96,10 +97,15 @@ const render = {
       let gameState;
       const mapArea = document.querySelector("#unit-map-area");
       const canvas = createUnitMapArea(mapArea);
+
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
         drawGame(canvas, gameState);
       });
+
+      let streamDeviceOrientation = setInterval(() => {
+        socket.emit("playerOrientationChange", angles);
+      }, 50);
     },
   },
 };
