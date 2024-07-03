@@ -129,6 +129,8 @@ export function drawGoal(canvas,config,player){
 export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
   const a = new Physics.Angle({alpha:0,beta:0,gamma:0});
+  const time =0.1;
+  const angleW = 0.7
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;
@@ -136,16 +138,24 @@ export const gameLoop = (config, players, socket) => () => {
     });
     a.alpha = a.alpha/players.length;
     a.beta = a.beta/players.length;
+    players.forEach((player) => {
+        player.angles.alpha = angleW*a.alpha+(1-angleW)*player.angles.alpha
+        player.angles.beta = angleW*a.beta+(1-angleW)*player.angles.beta
+        player.angles.gamma = angleW*a.gamma+(1-angleW)*player.angles.gamma
+    });
   players.forEach((player) => {
     // console.log(player.angles)
     Physics.kinematics(
-      a,
+      player.angles,
       player.ball,
-      0.1,
+      time,
       config.walls,
       config.mazeSize
     );
-  });
+//     players.forEach((otherPlayer) => {
+//         Physics.collision(player.ball, otherPlayer.ball, time, config.mazeSize);
+//   })
+});
 
   const gameState = new State({
     roundOver: false,

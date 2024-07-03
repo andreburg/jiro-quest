@@ -123,7 +123,7 @@ export class Wall {
 }
 
 export function kinematics(angle, ball, time, walls, mapsize) {
-  // console.log(angle);
+//   console.log(players.length);
   const g = -1;
   const rebounce = 0.5;
   const initialPosition = [ball.position.x, ball.position.y];
@@ -165,25 +165,85 @@ export function kinematics(angle, ball, time, walls, mapsize) {
   } else ball.position.y = newY;
 
   wallCollision(init, walls, time, rebounce, initialPosition);
+//   if(players.length>=2){collision(ball, players);}
+  
 }
 
-export function collision(ball1, ball2) {
-  let distance = Math.sqrt(
-    Math.pow(ball1.position.x - ball2.position.x, 2) +
-      Math.pow(ball1.position.y - ball2.position.y, 2)
-  );
-  if (distance <= 2*ball1.radius) {
-    vfx =
-      (ball1.mass * ball1.velocity.x + ball2.mass * ball2.velocity.x) /
-      (ball1.mass + ball2.mass);
-    vfy =
-      (ball1.mass * ball1.velocity.y + ball2.mass * ball2.velocity.y) /
-      (ball1.mass + ball2.mass);
+export function collision(ball1, ball2,time,mapsize) {
+    const rebounce = 0.5;
 
-    ball1.velocity.x = vfx;
-    ball1.velocity.y = vfy;
-    ball2.velocity.x = vfx;
-    ball2.velocity.y = vfy;
+    let distance = Math.sqrt(
+        Math.pow(ball1.position.x - ball2.position.x, 2) +
+        Math.pow(ball1.position.y - ball2.position.y, 2)
+      );
+  console.log(distance,ball1.position.x,ball1.position.y,ball2.position.x,ball2.position.y)
+  if ((distance <= 2*ball1.radius)&&(distance!=0)) {
+    
+
+    ball1.velocity.x = ((ball1.mass-ball2.mass)*ball1.velocity.x + 2*ball2.mass*ball2.velocity.x)/(ball1.mass+ball2.mass);
+    ball1.velocity.y = ((ball1.mass-ball2.mass)*ball1.velocity.y + 2*ball2.mass*ball2.velocity.y)/(ball1.mass+ball2.mass);
+
+    ball2.velocity.x = ((ball2.mass-ball1.mass)*ball2.velocity.x + 2*ball1.mass*ball1.velocity.x)/(ball1.mass+ball2.mass);
+    ball2.velocity.y = ((ball2.mass-ball1.mass)*ball2.velocity.y + 2*ball1.mass*ball1.velocity.y)/(ball1.mass+ball2.mass);
+
+    const ball1X = ball1.position.x + ball1.velocity.x*time + 0.5*ball1.acceleration.x*Math.pow(time,2);
+    const ball1Y = ball1.position.y + ball1.velocity.y*time + 0.5*ball1.acceleration.y*Math.pow(time,2);
+
+    const ball2X = ball2.position.x + ball2.velocity.x*time + 0.5*ball2.acceleration.x*Math.pow(time,2);
+    const ball2Y = ball2.position.y + ball2.velocity.y*time + 0.5*ball2.acceleration.y*Math.pow(time,2);
+
+    let d2 = Math.sqrt(Math.pow(ball1X - ball2X, 2) + Math.pow(ball1Y - ball2Y, 2));
+
+    if(d2>2*ball1.radius){
+        ball1.position.x = ball1X;
+        ball1.position.y = ball1Y;
+
+        ball2.position.x = ball2X;
+        ball2.position.y = ball2Y;
+    }else{
+        let tx = ball1.position.x;
+        let ty = ball1.position.y;
+        ball1.position.x = ball2.position.x+ball1.radius;
+        ball1.position.y = ball2.position.y+ball1.radius;
+        ball2.position.x = tx+ball2.radius;
+        ball2.position.y = ty+ball2.radius;
+    }
+
+    if (ball1X + ball1.radius > mapsize || ball1X - ball1.radius < 0) {
+        ball1.velocity.x = -ball1.velocity.x * rebounce;
+        ball1.acceleration.x = -ball1.acceleration.x;
+        ball1.position.x =
+        ball1.position.x +
+        ball1.velocity.x * time +
+          0.5 * ball1.acceleration.x * Math.pow(time, 2);
+      } else ball1.position.x = ball1X;
+    if (ball1Y + ball1.radius > mapsize || ball1Y - ball1.radius < 0) {
+        ball1.velocity.y = -ball1.velocity.y * rebounce;
+        ball1.acceleration.y = -ball1.acceleration.y;
+        ball1.position.y =
+        ball1.position.y +
+        ball1.velocity.y * time +
+          0.5 * ball1.acceleration.y * Math.pow(time, 2);
+      } else ball1.position.y = ball1Y;
+    if (ball2X + ball2.radius > mapsize || ball2X - ball2.radius < 0) {
+        ball2.velocity.x = -ball2.velocity.x * rebounce;
+        ball2.acceleration.x = -ball2.acceleration.x;
+        ball2.position.x =
+        ball2.position.x +
+        ball2.velocity.x * time +
+          0.5 * ball2.acceleration.x * Math.pow(time, 2);
+      } else ball2.position.x = ball2X;
+    if (ball2Y + ball2.radius > mapsize || ball2Y - ball2.radius < 0) {
+        ball2.velocity.y = -ball2.velocity.y * rebounce;
+        ball2.acceleration.y = -ball2.acceleration.y;
+        ball2.position.y =
+        ball2.position.y +
+        ball2.velocity.y * time +
+          0.5 * ball2.acceleration.y * Math.pow(time, 2);
+      } else ball2.position.y = ball2Y;
+
+    
+
   }
 }
 
@@ -366,21 +426,16 @@ export function generateMaze(width, height) {
 ////////////////////
 
 function main() {
-  const maze = generateMaze(10, 10);
-  let walls = wallCoordinates(maze);
+ // Example values
+let ball1 = { position: { x: 3, y: 4 } };
+let ball2 = { position: { x: 6, y: 8 } };
 
-  const ball = new Ball({
-    mass: 1,
-    position: { x: 0.5, y: 0.5, z: 0 },
-    velocity: { x: 0, y: 0, z: 0 },
-    acceleration: { x: 0, y: 0, z: 0 },
-  });
-  const angle = new Angle({ beta: -30, gamma: 30 });
-  for (let i = 0; i < 10; i++) {
-    kinematics(angle, ball, 0.1, walls);
-    // console.log(i)
-    // console.log(ball);
-  }
+let distance = Math.sqrt(
+  Math.pow(ball1.position.x - ball2.position.x, 2) +
+  Math.pow(ball1.position.y - ball2.position.y, 2)
+);
+
+console.log(distance); // Output: 5
 
   // let ball = new Body({
   //     position: {

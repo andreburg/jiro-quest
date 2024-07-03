@@ -136,11 +136,31 @@ const render = {
       const canvas = createUnitMapArea(mapArea);
 
       let players = sessionState.players.map(
-        (player) =>
-          new Player({
+        (player, index) => {
+          let startPositions = {}          
+          switch (index) {
+            case 0:
+              startPositions = { x: 0.5, y: 0.5, z: 0 };
+              break;
+            case 1:
+              startPositions = { x: 0.5, y: confg.mazeSize - 0.5, z: 0 };
+              break;
+            case 2:
+              startPositions = { x: confg.mazeSize - 0.5, y: 0.5, z: 0 };
+              break;
+            case 3:
+              startPositions = { x: confg.mazeSize - 0.5, y: confg.mazeSize - 0.5, z: 0 };
+              break;
+            default:
+              startPositions = { x: 0.5, y: 0.5, z: 0.5 };
+              break;
+          }
+          console.log(startPositions)
+          return new Player({
             username: player.username,
-            position: { x: 0.5, y: 0.5, z: 0.5 },
+            position: startPositions,
           })
+        }
       );
 
       window.requestAnimationFrame(gameLoop(confg, players, socket));
