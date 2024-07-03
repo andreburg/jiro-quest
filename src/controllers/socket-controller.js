@@ -35,10 +35,9 @@ const onPlayerOrientationChange = (io, socket) => (payload) => {
   });
 
   const userSession = getUserSession(username);
-
   io.in(userSession).emit("playerOrientationChange", {
     username,
-    event: payload.event,
+    angles: {alpha: payload.alpha, beta: payload.beta, gamma: payload.gamma},
   });
 };
 

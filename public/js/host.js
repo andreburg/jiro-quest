@@ -112,7 +112,7 @@ const render = {
       config.mazeSize;
 
       let players = sessionState.players.map(
-        (player, i) =>
+        (player) =>
           new Player({
             username: player.username,
             position: { x: 0.5, y: 0.5, z: 0.5 },
@@ -126,12 +126,11 @@ const render = {
         drawGame(canvas, gameState);
       });
 
-      socket.on("playerOrientationChange", ({ username, event }) => {
-        players.find((player) => player.username === username)[0].angles = {
-          alpha: event.alpha,
-          gamma: event.gamma,
-          beta: event.beta,
-        };
+      socket.on("playerOrientationChange", ({ username, angles }) => {
+        let foundUser = players.find((player) => player.username == username)
+        if(foundUser){
+          foundUser.angles = angles;
+        }
       });
     },
   },

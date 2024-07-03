@@ -131,7 +131,9 @@ export function initializeGyroscope(socket) {
       "deviceorientation",
       (event) => {
         socket.emit("playerOrientationChange", {
-          event,
+          alpha: event.alpha,
+            beta: event.beta,
+            gamma: event.gamma,
         });
       },
       true
