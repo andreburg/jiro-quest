@@ -125,7 +125,9 @@ export class Wall{
 export function kinematics(angle, ball, time, walls, mapsize){
     // console.log(angle);
     const g = -1
-    const rebounce = 0.8
+    const rebounce = 0.7
+    const initialPosition = [ball.position.x, ball.position.y];
+    const init = ball
 
     // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
     // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
@@ -140,17 +142,17 @@ export function kinematics(angle, ball, time, walls, mapsize){
 
     if(newX + ball.radius > mapsize || newX - ball.radius < 0){
         ball.velocity.x = -ball.velocity.x*rebounce;
-        ball.acceleration.x = -ball.acceleration.x*rebounce;
+        ball.acceleration.x = -ball.acceleration.x;
         ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
     }else(ball.position.x = newX)
 
     if(newY + ball.radius > mapsize || newY - ball.radius < 0){
         ball.velocity.y = -ball.velocity.y*rebounce;
-        ball.acceleration.y = -ball.acceleration.y*rebounce;
+        ball.acceleration.y = -ball.acceleration.y;
         ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
     }else(ball.position.y = newY)
 
-    wallCollision(ball, walls, time);
+    wallCollision(init, walls, time,rebounce, initialPosition);
 }
 
 export function collision(ball1, ball2){
@@ -166,20 +168,54 @@ export function collision(ball1, ball2){
     }
 }
 
-export function wallCollision(ball, walls, time){
+// export function maxDistance(pos1, pos2, wallPos){
+//     let d1 = Math.abs(pos1 - wallPos);
+//     let d2 = Math.abs(pos2 - wallPos);
+// }
+
+function getAboveOrBelow(ball, wall, radius){
+    if (ball < wall){ 
+        return true;
+    }
+    else{
+        // console.log(wall,wall+radius, ball+radius)
+        return false;
+    }}
+
+
+// Math.abs(ball.position.y - wall.yStart)<=1.1*ball.radius && (ball.position.x - 1.1*ball.radius >= wall.xStart && ball.position.x + 1.1*ball.radius <= wall.xEnd)
+export function wallCollision(ball, walls, time, rebounce, initialPosition){
+    const wallExtend = -1.08;
     walls.forEach(wall => {
         if (wall.direction === 'N'){
-            if (Math.abs(ball.position.y - wall.yStart)<=0.1 && (ball.position.x >= wall.xStart && ball.position.x <= wall.xEnd)){
-                ball.velocity.y = -ball.velocity.y;
+            if (Math.abs(ball.position.y - wall.yStart)<=0.9*ball.radius && (ball.position.x - wallExtend*ball.radius >= wall.xStart && ball.position.x + wallExtend*ball.radius <= wall.xEnd)){
+                ball.velocity.y = -ball.velocity.y*rebounce;
                 ball.acceleration.y = -ball.acceleration.y;
-                ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+
+                if(getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)){
+                    ball.position.y = wall.yStart - ball.radius + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+                }
+                if(!getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)){
+                    ball.position.y = wall.yStart + ball.radius + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+                }
+                // ball.position.y = 
+                // initialPosition[1]
+                // ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
             }
         }
         if (wall.direction === 'W'){
-            if (Math.abs(ball.position.x - wall.xStart)<=0.1 && (ball.position.y >= wall.yStart && ball.position.y <= wall.yEnd)){
-                ball.velocity.x = -ball.velocity.x;
+            if (Math.abs(ball.position.x - wall.xStart)<=0.9*ball.radius && (ball.position.y - wallExtend*ball.radius >= wall.yStart && ball.position.y + wallExtend*ball.radius <= wall.yEnd)){
+                ball.velocity.x = -ball.velocity.x*rebounce;
                 ball.acceleration.x = -ball.acceleration.x;
-                ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+
+                if(getAboveOrBelow(ball.position.x, wall.xStart, ball.radius)){
+                    ball.position.x = wall.xStart - ball.radius + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+                }
+                if(!getAboveOrBelow(ball.position.x, wall.xStart, ball.radius)){
+                    ball.position.x = wall.xStart + ball.radius + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
+                }
+                // ball.position.x = initialPosition[0]
+                // ball.position.x = ball.position.x + ball.velocity.x*time + 0.5*ball.acceleration.x*Math.pow(time,2);
             }
         }
     }

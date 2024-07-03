@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     console.log(maze)
     const walls = Physics.wallCoordinates(maze);
     console.log(walls);
+    console.log(walls);
     drawMaze(maze,canvas,config);
     drawBall(player, config,canvas);
     gameLoop(config, maze, [player], canvas, walls);
@@ -97,10 +98,13 @@ function drawBall(player, config, canvas) {
   const radius = player.ball.radius*config.scale
 
   ctx.beginPath();
-  ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
-  ctx.fillStyle = player.ball.color;
-  ctx.fill();
-  ctx.closePath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = player.ball.colour;
+  ctx.fill(); 
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "black";
+  ctx.stroke();
+  ctx.lineWidth = 10;
 }
 
 function gameLoop(config, maze, players, canvas,walls) {
