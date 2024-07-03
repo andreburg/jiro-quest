@@ -156,6 +156,10 @@ const render = {
           foundUser.angles = angles;
         }
       });
+
+      let streamDeviceOrientation = setInterval(() => {
+        socket.emit("playerOrientationChange", angles);
+      }, 100);
     },
   },
 };
