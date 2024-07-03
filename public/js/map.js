@@ -151,7 +151,6 @@ export const gameLoop = (config, players, socket) => () => {
     socket.emit("gameStateChange", {
       game: gameState,
     });
-    window.requestAnimationFrame(gameLoop(config, players, socket));
   }, 50);
 };
 
