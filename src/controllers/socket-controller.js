@@ -1,5 +1,5 @@
 const { Socket, Server: SocketServer } = require("socket.io");
-const { generateUID, hostProtected, JWT_SECRET } = require("../lib/utils");
+const { hostProtected, JWT_SECRET, playerProtected } = require("../lib/utils");
 const { sessions, getUserSession } = require("../lib/sessions");
 const jwt = require("jsonwebtoken");
 
@@ -12,20 +12,28 @@ const onSocketConnection = (io) => (socket) => {
     leaveSession: onLeaveSession,
     disconnect: onPlayerDisconnect,
 
+    // Spectate Actions
+    spectateSession: onSpectateSession,
+
     // Host Actions
     kickPlayer: hostProtected(onKickPlayer),
     sessionStateChange: hostProtected(onSessionStateChange),
     gameStateChange: hostProtected(onGameStateChange),
 
     // Player Actions
-    playerOrientationChange: onPlayerOrientationChange,
-    playerReady: onPlayerReady,
+    playerOrientationChange: playerProtected(onPlayerOrientationChange),
+    playerReady: playerProtected(onPlayerReady),
   };
 
   for (let key in socketRouter) {
     let func = socketRouter[key];
     socket.on(key, func(io, socket));
   }
+};
+
+/** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
+const onSpectateSession = (io, socket) => (payload) => {
+  socket.join(payload.sessionId);
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
@@ -91,7 +99,6 @@ const onPlayerDisconnect = (io, socket) => (payload) => {
   const userSession = getUserSession(username);
   const session = sessions.get(userSession);
 
-  console.log("disconnected");
   if (session) {
     if (session?.hostUsername === username) {
       io.in(userSession).emit("disconnected", {});

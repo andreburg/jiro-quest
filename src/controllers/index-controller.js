@@ -54,6 +54,19 @@ const joinSession = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
+const spectateSession = async (req, res) => {
+  const { sessionId } = req.params;
+  if (sessions.get(sessionId)) {
+    res.sendFile(path.join(__dirname, `../views/spectator/lobby.html`));
+  } else {
+    res.status(404).send("Lobby not found");
+  }
+};
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
 const getJoinPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/join.html"));
 };
@@ -117,5 +130,6 @@ module.exports = {
   signInUser,
   joinSession,
   getLossPage,
-  getWinPage
+  getWinPage,
+  spectateSession,
 };

@@ -30,10 +30,32 @@ const hostProtected = (callback) => (io, socket) => (payload) => {
   }
 };
 
+/**
+ * @param {Function} callback
+ * @param {SocketServer} io
+ * @param {Socket} socket
+ */
+const playerProtected = (callback) => (io, socket) => (payload) => {
+  let username;
+  jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
+    username = tokenData?.username;
+  });
+
+  const session = sessions.get(getUserSession(username));
+  if (session?.players.includes(username)) {
+    callback(io, socket)(payload);
+  } else {
+    socket.emit("error", {
+      message: "Unauthorized",
+    });
+  }
+};
+
 const JWT_SECRET = process.env.JWT_SECRET + String(generateUID());
 
 module.exports = {
   generateUID,
   hostProtected,
+  playerProtected,
   JWT_SECRET,
 };
