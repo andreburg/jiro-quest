@@ -1,6 +1,5 @@
 import { Player } from "./gameState.js";
 import {
-  angles,
   config,
   createUnitMapArea,
   drawGame,
@@ -143,8 +142,8 @@ const render = {
             position: { x: 0.5, y: 0.5, z: 0.5 },
           })
       );
-      gameLoop(confg, players, socket);
-      // window.requestAnimationFrame(gameLoop(confg, players, socket));
+
+      window.requestAnimationFrame(gameLoop(confg, players, socket));
 
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
