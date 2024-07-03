@@ -164,9 +164,9 @@ export const drawGame = (canvas, gameState) => {
 };
 
 export const angles = {
-  alpha,
-  beta,
-  gamma,
+  alpha: null,
+  beta: null,
+  gamma: null,
 };
 
 export function initializeGyroscope(socket, startButton) {
