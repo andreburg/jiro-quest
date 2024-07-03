@@ -121,12 +121,12 @@ export class Wall {
   }
 }
 
-export function kinematics(angle, ball, time, walls, mapsize) {
-  // console.log(angle);
-  const g = -1;
-  const rebounce = 0.7;
-  const initialPosition = [ball.position.x, ball.position.y];
-  const init = ball;
+export function kinematics(angle, ball, time, walls, mapsize){
+    // console.log(angle);
+    const g = -1
+    const rebounce = 0.5
+    const initialPosition = [ball.position.x, ball.position.y];
+    const init = ball
 
   // ball.acceleration.x = g * Math.sin(angle.beta*Math.PI/180);
   // ball.acceleration.y = -g * Math.sin(angle.gamma*Math.PI/180);
@@ -201,45 +201,29 @@ function getAboveOrBelow(ball, wall, radius) {
 }
 
 // Math.abs(ball.position.y - wall.yStart)<=1.1*ball.radius && (ball.position.x - 1.1*ball.radius >= wall.xStart && ball.position.x + 1.1*ball.radius <= wall.xEnd)
-export function wallCollision(ball, walls, time, rebounce, initialPosition) {
-  const wallExtend = -1.08;
-  walls.forEach((wall) => {
-    if (wall.direction === "N") {
-      if (
-        Math.abs(ball.position.y - wall.yStart) <= 0.9 * ball.radius &&
-        ball.position.x - wallExtend * ball.radius >= wall.xStart &&
-        ball.position.x + wallExtend * ball.radius <= wall.xEnd
-      ) {
-        ball.velocity.y = -ball.velocity.y * rebounce;
-        ball.acceleration.y = -ball.acceleration.y;
+export function wallCollision(ball, walls, time, rebounce, initialPosition){
+    const wallExtend = -1.06;
+    walls.forEach(wall => {
+        if (wall.direction === 'N'){
+            if (Math.abs(ball.position.y - wall.yStart)<=ball.radius && (ball.position.x - wallExtend*ball.radius >= wall.xStart && ball.position.x + wallExtend*ball.radius <= wall.xEnd)){
+                ball.velocity.y = -ball.velocity.y*rebounce;
+                ball.acceleration.y = -ball.acceleration.y;
 
-        if (getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)) {
-          ball.position.y =
-            wall.yStart -
-            ball.radius +
-            ball.velocity.y * time +
-            0.5 * ball.acceleration.y * Math.pow(time, 2);
+                if(getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)){
+                    ball.position.y = wall.yStart - ball.radius + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+                }
+                if(!getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)){
+                    ball.position.y = wall.yStart + ball.radius + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+                }
+                // ball.position.y = 
+                // initialPosition[1]
+                // ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
+            }
         }
-        if (!getAboveOrBelow(ball.position.y, wall.yStart, ball.radius)) {
-          ball.position.y =
-            wall.yStart +
-            ball.radius +
-            ball.velocity.y * time +
-            0.5 * ball.acceleration.y * Math.pow(time, 2);
-        }
-        // ball.position.y =
-        // initialPosition[1]
-        // ball.position.y = ball.position.y + ball.velocity.y*time + 0.5*ball.acceleration.y*Math.pow(time,2);
-      }
-    }
-    if (wall.direction === "W") {
-      if (
-        Math.abs(ball.position.x - wall.xStart) <= 0.9 * ball.radius &&
-        ball.position.y - wallExtend * ball.radius >= wall.yStart &&
-        ball.position.y + wallExtend * ball.radius <= wall.yEnd
-      ) {
-        ball.velocity.x = -ball.velocity.x * rebounce;
-        ball.acceleration.x = -ball.acceleration.x;
+        if (wall.direction === 'W'){
+            if (Math.abs(ball.position.x - wall.xStart)<=ball.radius && (ball.position.y - wallExtend*ball.radius >= wall.yStart && ball.position.y + wallExtend*ball.radius <= wall.yEnd)){
+                ball.velocity.x = -ball.velocity.x*rebounce;
+                ball.acceleration.x = -ball.acceleration.x;
 
         if (getAboveOrBelow(ball.position.x, wall.xStart, ball.radius)) {
           ball.position.x =
@@ -333,45 +317,51 @@ export function generateMaze(width, height) {
     Array.from({ length: width }, () => ({
       N: true, // Wall to the North
       W: true, // Wall to the West
-    }))
-  );
+    })));
+  
+    // Connect cells
+    edges.forEach(edge => {
+      const {x, y, direction} = edge;
+      const cell = cells[y][x];
+      let neighbor;
+      if (direction === 'N') neighbor = cells[y - 1][x];
+      if (direction === 'W') neighbor = cells[y][x - 1];
+  
+      if (cell.find() !== neighbor.find()) {
+        cell.union(neighbor);
+        maze[y][x][direction] = false; // Remove wall
+      }
+    });
 
-  // Connect cells
-  edges.forEach((edge) => {
-    const { x, y, direction } = edge;
-    const cell = cells[y][x];
-    let neighbor;
-    if (direction === "N") neighbor = cells[y - 1][x];
-    if (direction === "W") neighbor = cells[y][x - 1];
+    const middleTop = Math.floor(height/2);
+    const middleLeft = Math.floor(width/2);
+    maze[middleTop][middleLeft].N = false;
+    maze[middleTop][middleLeft].W = false;
+    maze[middleTop][middleLeft+1].W = false;
+    maze[middleTop+1][middleLeft].N = false;
 
-    if (cell.find() !== neighbor.find()) {
-      cell.union(neighbor);
-      maze[y][x][direction] = false; // Remove wall
-    }
-  });
-  // console.log(maze)
-  return maze;
-}
+    // console.log(maze)
 
-// Example usage
-////////////////////
+    return maze;
+  }
+  
+  // Example usage
+  ////////////////////
 
 function main() {
-  const maze = generateMaze(10, 10);
-  let walls = wallCoordinates(maze);
 
-  const ball = new Ball({
-    mass: 1,
-    position: { x: 0.5, y: 0.5, z: 0 },
-    velocity: { x: 0, y: 0, z: 0 },
-    acceleration: { x: 0, y: 0, z: 0 },
-  });
-  const angle = new Angle({ beta: -30, gamma: 30 });
-  for (let i = 0; i < 10; i++) {
-    kinematics(angle, ball, 0.1, walls);
-    // console.log(i)
-    // console.log(ball);
-  }
+  
+    // const maze = generateMaze(10,10);
+    // let walls = wallCoordinates(maze);
+
+    // const ball = new Ball({mass: 1, position: {x: 0.5, y: 0.5, z: 0}, velocity: {x: 0, y: 0, z: 0}, acceleration: {x: 0, y: 0, z: 0}});
+    // const angle = new Angle({beta: -30, gamma: 30});
+    // for (let i = 0; i < 10; i++){
+    //     kinematics(angle, ball, 0.1, walls);
+    //     // console.log(i)
+    //     // console.log(ball);
+    // }
+
 
   // let ball = new Body({
   //     position: {
