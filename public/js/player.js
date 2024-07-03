@@ -30,32 +30,32 @@ const render = {
   lobby: {
     load: () => {
       document.querySelector("#app").innerHTML = `
-      <div class="center-div">
+      <div class="center-div host-page-container">
+            <img src="/public/assets/brutalism/Brutalist 79.png" alt="random illustration" />
+            <div class="join-prompt">
               <h1>Waiting For Host...</h1>
-              <table class="table">
-                  <thead>
-                      <tr>
-                          <th>#</th>
-                          <th>Username</th>
-                          <th>Ready</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    ${sessionState.players
-                      .map((player, i) => {
-                        return `
-                        <tr>
-                          <td>${i + 1}</td>
-                          <td>${player.username}</td>
-                          <td>${player.ready}</td>
-                      </tr>
-                        `;
-                      })
-                      .join("")}
-                  </tbody>
-              </table>
-              <div>
-                  <button class="button button-danger button-medium" onclick={}>Exit</button>
+            </div>
+              <div class="lobby-player-list-container">
+                      ${sessionState.players
+          .map((player, i) => {
+
+            return `
+                            <div class="lobby-player-list-item ${player.ready ? "ready" : ""}">
+                              <div class="lobby-player-list-item-vertical">
+                                <div class="lobby-player-list-item-username">
+                                  ${player.username}
+                                </div>
+                                <div class="lobby-player-list-item-ready">
+                                  ${player.ready ? "Ready" : "Not Ready"}
+                                </div>
+                              </div>
+                          </div>
+
+                          `;
+          })}
+              </div>
+              <div class="right-aligned-button-group">
+                  <button class="button-danger" onclick={}>Exit</button>
                   ${
                     sessionState.players.find(
                       (player) => player.socketId === socket.id
