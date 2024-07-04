@@ -135,7 +135,7 @@ export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
   const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
   const time = 0.1;
-  const angleW = 0.9;
+  const angleW = 0.6;
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;
