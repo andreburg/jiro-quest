@@ -1,4 +1,4 @@
-import Components from "./Components.js";
+import Components from "./components.js";
 
 export default class Component {
   constructor(params) {

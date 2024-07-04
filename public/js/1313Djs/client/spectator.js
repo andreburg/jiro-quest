@@ -1,7 +1,8 @@
-import Route from "./Routes/Route.js";
-import Client from "./client.js";
+import Client, { session } from "./client.js";
 import LobbySpectator from "../pages/spectator/lobby.js";
 import RoundSpectator from "../pages/spectator/round.js";
+import { socket } from "../../socket/spectatorSocket.js";
+import Route from "../router/route.js";
 
 export default class Spectator extends Client {
   constructor() {
@@ -11,5 +12,13 @@ export default class Spectator extends Client {
       new Route("lobby", new LobbySpectator()),
       new Route("round", new RoundSpectator()),
     ];
+
+    socket.on("sessionStateChange", ({ session: newSession }) => {
+      session.state = newSession;
+      this.route();
+    });
   }
 }
+
+session.socket = socket;
+new Spectator();

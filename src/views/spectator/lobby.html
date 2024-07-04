@@ -4,38 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/public/css/globals.css" />
-        <title>Awaiting Players</title>
+        <title>Awaiting Host</title>
+        <script src="/public/js/lib/wakeLock.js"></script>
+        <script src="/public/js/1313Djs/client/spectator.js" type="module"></script>
     </head>
     <body>
-        <div class="center-div">
-            <h1>Waiting For Players...</h1>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><img src="player-icon.png"  > Player 1 <span class="remove-button"></span></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><img src="player-icon.png"> Player 2 <span class="remove-button"></span></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td><img src="player-icon.png"> Player 3 <span class="remove-button"></span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div>
-                <button class="button button-danger button-medium">Exit</button>
-                <button class="button button-success button-medium">Start</button>
-            </div>
-        </div>
+        <div id="app"></div>
     </body>
     </html>
 </html>

@@ -1,5 +1,6 @@
 import Page from "../page.js";
-export default class RoundPlayer extends Page {
+
+export default class NotFoundPage extends Page {
   constructor(params) {
     super(params);
   }
@@ -7,7 +8,7 @@ export default class RoundPlayer extends Page {
   getHtml() {
     return `
                 <div>
-                    round
+                    NotFound
                 </div>
             `;
   }

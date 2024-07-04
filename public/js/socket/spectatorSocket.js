@@ -5,7 +5,7 @@ export const socket = io("/");
 const sessionIdMatch = window.location.pathname.match(/\/lobby\/([^/]+)/);
 const sessionId = sessionIdMatch ? sessionIdMatch[1] : null;
 if (sessionId) {
-  socket.emit("joinSession", {
+  socket.emit("spectateSession", {
     sessionId: sessionId,
   });
 }

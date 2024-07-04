@@ -34,6 +34,8 @@ const onSocketConnection = (io) => (socket) => {
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onSpectateSession = (io, socket) => (payload) => {
   socket.join(payload.sessionId);
+  const session = sessions.get(payload.sessionId);
+  io.in(payload.sessionId).emit("sessionStateChange", { session });
 };
 
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
@@ -178,7 +180,7 @@ const onLeaveSession = (io, socket) => (payload) => {
 
   socket.leave(userSession);
 
-  socket.emit("sessionStateChange", { session });
+  io.in(userSession).emit("sessionStateChange", { session });
   socket.disconnect();
 };
 
@@ -203,7 +205,7 @@ const onKickPlayer = (io, socket) => (payload) => {
     session.players = session.players.filter(
       (p) => p.username !== payload.username
     );
-    socket.emit("sessionStateChange", { session });
+    io.in(userSession).emit("sessionStateChange", { session });
   }
 };
 

@@ -1,4 +1,4 @@
-/** @type {Map<string, { hostUsername: string, status: string, round: int, players: [{socketId: string, username: string, score: number, ready: Boolean}] }>} */
+/** @type {Map<string, { hostUsername: string, status: string, round: int, players: [{socketId: string, username: string, score: number, ready: Boolean}], route: string }>} */
 let sessions = new Map();
 
 const getUserSession = (username) => {

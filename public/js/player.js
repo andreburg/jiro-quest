@@ -8,13 +8,10 @@ import {
   gameLoop,
   initializeGyroscope,
 } from "./map.js";
-import { socket } from "./socket.js";
+import { socket } from "./socket/playerSocket.js";
 import * as Physics from "./physics/body.js";
 
 let sessionState;
-const kickPlayer = (username) => {
-  socket.emit("kickPlayer", { username });
-};
 
 socket.on("disconnected", () => {
   window.location.pathname = "/join";
@@ -69,12 +66,6 @@ const render = {
               </div>
           </div>
       `;
-
-      document.querySelectorAll(".kick-player-button").forEach((kickButton) => {
-        kickButton.addEventListener("click", () => {
-          kickPlayer(kickButton.id.split("-")[3]);
-        });
-      });
 
       if (document.querySelector("#readyButton"))
         initializeGyroscope(socket, document.querySelector("#readyButton"));

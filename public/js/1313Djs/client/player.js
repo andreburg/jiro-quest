@@ -1,9 +1,8 @@
-import Route from "./Routes/Route.js";
-import LobbyHost from "../pages/host/lobby.js";
-import RoundHost from "../pages/host/round.js";
-import Client from "./client.js";
+import Client, { session } from "./client.js";
 import LobbyPlayer from "../pages/player/lobby.js";
 import RoundPlayer from "../pages/player/round.js";
+import Route from "../router/route.js";
+import { socket } from "../../socket/playerSocket.js";
 
 export default class Player extends Client {
   constructor() {
@@ -13,5 +12,13 @@ export default class Player extends Client {
       new Route("lobby", new LobbyPlayer()),
       new Route("round", new RoundPlayer()),
     ];
+
+    socket.on("sessionStateChange", ({ session: newSession }) => {
+      session.state = newSession;
+      this.route();
+    });
   }
 }
+
+session.socket = socket;
+new Player();

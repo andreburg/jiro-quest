@@ -1,5 +1,5 @@
-import Route from "./Route.js";
-import NotFoundPage from "../Pages/NotFound/NotFound.js";
+import NotFoundPage from "../pages/not-found/not-found-page.js";
+import Route from "./route.js";
 
 export default class Router {
   constructor(routes) {
@@ -7,8 +7,8 @@ export default class Router {
     this.notFound = new Route("Not Found", new NotFoundPage());
   }
 
-  loadRoute(url) {
-    let route = this.routes.find((r) => r.route == "/" + url);
+  loadRoute(redir) {
+    let route = this.routes.find((r) => r.route == redir.route);
     route = route ? route : this.notFound;
     return route;
   }

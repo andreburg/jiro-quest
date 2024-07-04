@@ -29,6 +29,7 @@ const createSession = async (req, res) => {
     status: "lobby",
     players: [],
     round: 0,
+    route: "lobby",
   });
   res.redirect(`/lobby/${sessionId}`);
 };

@@ -16,8 +16,8 @@ import {
   drawMaze,
   gameLoop,
   initializeGyroscope,
-} from "./map.js";
-import { socket } from "./socket.js";
+} from "./map.js";
+import { socket } from "./socket/playerSocket.js";
 import * as Physics from "./physics/body.js";
 
 let sessionState;
@@ -46,11 +46,11 @@ const render = {
               <h2>${window.location.href.split("/").pop()}</h2>
             </div>
               <div class="lobby-player-list-container">
-                      ${sessionState.players
-          .map((player, i) => {
-
-            return `
-                            <div class="lobby-player-list-item ${player.ready ? "ready" : ""}">
+                      ${sessionState.players.map((player, i) => {
+                        return `
+                            <div class="lobby-player-list-item ${
+                              player.ready ? "ready" : ""
+                            }">
                               <div class="lobby-player-list-item-vertical">
                                 <div class="lobby-player-list-item-username">
                                   ${player.username}
@@ -59,20 +59,21 @@ const render = {
                                   ${player.ready ? "Ready" : "Not Ready"}
                                 </div>
                               </div>
-                              ${player.username !== sessionState.hostUsername
-                ? `                         
+                              ${
+                                player.username !== sessionState.hostUsername
+                                  ? `                         
                             <div class="kick-player-button" id="kick-player-button-${player.username}">
                               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="9" cy="9" r="8.5" fill="#FF6B6B" stroke="black"/>
                                 <line x1="6" y1="9" x2="12" y2="9" stroke="black" stroke-width="2"/>
                               </svg>
                             </div>`
-                : ""
-              }
+                                  : ""
+                              }
                           </div>
 
                           `;
-          })}
+                      })}
               </div>
 
               <div class="right-aligned-button-group">
@@ -86,13 +87,13 @@ const render = {
                                   `
                   }
                   ${
-        sessionState.players.every((player) => player.ready)
-          ? `
+                    sessionState.players.every((player) => player.ready)
+                      ? `
                     <div>
                       <button class="" id="start-game-button">Start</button>
                     </div>
                     `
-        : ""
+                      : ""
                   }
                   <button class="button-danger" onclick={}>Exit</button>
               </div>
@@ -186,7 +187,9 @@ const render = {
         // NOTE: the following code just updates the player stats
         // We can take this out if its messing with the socket or the performance
         // START: player stats
-        const playerStatsContainer = document.getElementById("live-stats-container");
+        const playerStatsContainer = document.getElementById(
+          "live-stats-container"
+        );
         playerStatsContainer.innerHTML = "";
 
         gameState.players.forEach((player) => {
@@ -203,7 +206,7 @@ const render = {
           playerStatsContainer.appendChild(playerStats);
         });
         // END: player stats
-      }
+      };
 
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
@@ -211,9 +214,9 @@ const render = {
         if (firstRender) {
           drawMaze(mapCanvas, gameState.config);
           drawGoal(mapCanvas, gameState.config, gameState.players[0]);
-          updateGameStats(gameState)
+          updateGameStats(gameState);
           firstRender = false;
-        };
+        }
       });
 
       socket.on("playerOrientationChange", ({ username, angles }) => {

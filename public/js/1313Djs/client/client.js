@@ -1,9 +1,10 @@
-import { Router } from "express";
-import Route from "../router/route";
-import GameStart from "../pages/general/game-start";
-import RoundStart from "../pages/general/round-start";
-import RoundEnd from "../pages/general/round-end";
-import GameEnd from "../pages/general/game-end";
+import Route from "../router/route.js";
+import GameStart from "../pages/general/game-start.js";
+import RoundStart from "../pages/general/round-start.js";
+import RoundEnd from "../pages/general/round-end.js";
+import GameEnd from "../pages/general/game-end.js";
+import Router from "../router/router.js";
+import { socket } from "../../socket/playerSocket.js";
 
 export default class Client {
   constructor() {
@@ -14,22 +15,23 @@ export default class Client {
       new Route("round-end", new RoundEnd()),
     ]);
 
-    this.sessionState = {
-      route: "lobby",
-    };
-
-    addEventListener("DOMContentLoaded", route);
-    socket.on("sessionStateChange", ({ sessionState }) => {
-      this.sessionState = sessionState;
-      route();
-    });
+    addEventListener("DOMContentLoaded", this.route);
+    this.route();
   }
 
   route = () => {
-    let route = router.LoadRoute(this.sessionState.route);
+    console.log(session.state);
+    let route = this.router.loadRoute(session.state);
     app.innerHTML = route.comp.getHtml();
     route.comp.sideEffects();
   };
 }
 
 export const app = document.querySelector("#app");
+
+export const session = {
+  state: {
+    route: "lobby",
+  },
+  socket: null,
+};

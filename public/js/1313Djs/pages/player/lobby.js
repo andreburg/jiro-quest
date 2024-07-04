@@ -1,20 +1,23 @@
-import Calculator from "../../Components/Calculator/Calculator.js";
-import Nav from "../../Components/Nav/Nav.js";
-import Page from "../Page.js";
+import Page from "../page.js";
 
 export default class LobbyPlayer extends Page {
   constructor(params) {
     super(params);
-    this.comps.Add("nav", new Nav());
-    this.comps.Add("calculator", new Calculator());
+    // this.comps.Add("nav", new Nav());
+    // this.comps.Add("calculator", new Calculator());
   }
 
   getHtml() {
+    // return `
+    //         ${this.comps.Render("nav")}
+    //         <div id="calc-page">
+    //             ${this.comps.Render("calculator")}
+    //         </div>
+    //     `;
     return `
-            ${this.comps.Render("nav")}
-            <div id="calc-page">
-                ${this.comps.Render("calculator")}
-            </div>
-        `;
+    <div>
+        lobby
+    </div>
+    `;
   }
 }
