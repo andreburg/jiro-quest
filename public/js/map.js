@@ -35,10 +35,10 @@ export function drawMaze(canvas, config) {
   const ctx = canvas.getContext("2d");
   //   cxt.clearRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = "black";
-//   ctx.shadowColor = "rgba(0, 0, 0, 1)";
-//   ctx.shadowBlur = 10;
-//   ctx.shadowOffsetX = 5;
-//   ctx.shadowOffsetY = 5;
+  //   ctx.shadowColor = "rgba(0, 0, 0, 1)";
+  //   ctx.shadowBlur = 10;
+  //   ctx.shadowOffsetX = 5;
+  //   ctx.shadowOffsetY = 5;
   ctx.strokeRect(
     0,
     0,
@@ -63,10 +63,10 @@ export function drawMaze(canvas, config) {
       }
     });
   });
-//   ctx.shadowColor = "rgba(0, 0, 0, 0)";
-//   ctx.shadowBlur = 0;
-//   ctx.shadowOffsetX = 0;
-//   ctx.shadowOffsetY = 0;
+  //   ctx.shadowColor = "rgba(0, 0, 0, 0)";
+  //   ctx.shadowBlur = 0;
+  //   ctx.shadowOffsetX = 0;
+  //   ctx.shadowOffsetY = 0;
 }
 
 //Player example
@@ -89,10 +89,10 @@ export function drawBall(player, config, canvas) {
   const ctx = canvas.getContext("2d");
   const radius = player.ball.radius * config.scale;
 
-//   ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-//   ctx.shadowBlur = 10;
-//   ctx.shadowOffsetX = 4;
-//   ctx.shadowOffsetY = 4;
+  //   ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+  //   ctx.shadowBlur = 10;
+  //   ctx.shadowOffsetX = 4;
+  //   ctx.shadowOffsetY = 4;
 
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -102,11 +102,11 @@ export function drawBall(player, config, canvas) {
   ctx.strokeStyle = player.ball.colour;
   ctx.stroke();
   ctx.lineWidth = 5;
-//   ctx.shadowBlur = 0;
-//   ctx.shadowColor = "rgba(0, 0, 0, 0)";
-//   ctx.shadowBlur = 0;
-//   ctx.shadowOffsetX = 0;
-//   ctx.shadowOffsetY = 0;
+  //   ctx.shadowBlur = 0;
+  //   ctx.shadowColor = "rgba(0, 0, 0, 0)";
+  //   ctx.shadowBlur = 0;
+  //   ctx.shadowOffsetX = 0;
+  //   ctx.shadowOffsetY = 0;
 }
 
 export function drawGoal(canvas, config, player) {
@@ -115,7 +115,7 @@ export function drawGoal(canvas, config, player) {
   const radius = player.ball.radius * config.scale;
   const goalRadius = radius * 2;
   const mapColour = "grey";
-//   console.log(!!canvas);
+  //   console.log(!!canvas);
 
   const ctx = canvas.getContext("2d");
   //   cxt.clearRect(0, 0, canvas.width, canvas.height);
@@ -136,7 +136,7 @@ export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
   const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
   const time = 0.1;
-  const angleW = 0.6;
+  const angleW = 0.4;
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;
