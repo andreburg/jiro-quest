@@ -138,7 +138,7 @@ const render = {
       `;
 
       let gameState;
-
+      let firstRender = true;
       const mapArea = document.querySelector("#unit-map-area");
       const canvas = createUnitMapArea(mapArea);
 
@@ -172,10 +172,7 @@ const render = {
 
       window.requestAnimationFrame(gameLoop(confg, players, socket));
 
-      socket.on("gameStateChange", ({ game }) => {
-        gameState = { ...gameState, ...game };
-        drawGame(canvas, gameState);
-
+      const updateGameStats = (gameState) => {
         // NOTE: the following code just updates the player stats
         // We can take this out if its messing with the socket or the performance
         // START: player stats
@@ -196,6 +193,15 @@ const render = {
           playerStatsContainer.appendChild(playerStats);
         });
         // END: player stats
+      }
+
+      socket.on("gameStateChange", ({ game }) => {
+        gameState = { ...gameState, ...game };
+        drawGame(canvas, gameState);
+        if (firstRender) {
+          updateGameStats(gameState)
+          firstRender = false;
+        };
       });
 
       socket.on("playerOrientationChange", ({ username, angles }) => {

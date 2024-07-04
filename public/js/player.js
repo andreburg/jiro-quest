@@ -97,13 +97,11 @@ const render = {
       </div>
       `;
       let gameState;
+      let firstRender = true;
       const mapArea = document.querySelector("#unit-map-area");
       const canvas = createUnitMapArea(mapArea);
 
-      socket.on("gameStateChange", ({ game }) => {
-        gameState = { ...gameState, ...game };
-        drawGame(canvas, gameState);
-
+      const updateGameStats = (gameState) => {
         // NOTE: the following code just updates the player stats
         // We can take this out if its messing with the socket or the performance
         // START: player stats
@@ -124,6 +122,15 @@ const render = {
           playerStatsContainer.appendChild(playerStats);
         });
         // END: player stats
+      }
+
+      socket.on("gameStateChange", ({ game }) => {
+        gameState = { ...gameState, ...game };
+        drawGame(canvas, gameState);
+        if (firstRender) {
+          updateGameStats(gameState)
+          firstRender = false;
+        };
       });
 
       let streamDeviceOrientation = setInterval(() => {
