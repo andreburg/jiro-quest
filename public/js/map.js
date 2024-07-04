@@ -181,7 +181,9 @@ export const gameLoop = (config, players, socket) => () => {
     game: gameState,
   });
 
-  if (!(config.score <= 0)) {
+  if (
+    !(config.score < 3 - session.state?.players?.length || config.score === 0)
+  ) {
     window.requestAnimationFrame(gameLoop(config, players, socket));
   } else {
     session.state.route = "game-end";
