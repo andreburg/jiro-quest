@@ -20,6 +20,7 @@ const onSocketConnection = (io) => (socket) => {
     sessionStateChange: hostProtected(onSessionStateChange),
     gameStateChange: hostProtected(onGameStateChange),
 
+
     // Player Actions
     playerOrientationChange: playerProtected(onPlayerOrientationChange),
     playerReady: playerProtected(onPlayerReady),
