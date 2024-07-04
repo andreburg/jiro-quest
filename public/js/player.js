@@ -32,8 +32,9 @@ const render = {
       document.querySelector("#app").innerHTML = `
       <div class="center-div host-page-container">
             <img src="/public/assets/brutalism/Brutalist 79.png" alt="random illustration" />
-            <div class="join-prompt">
+            <div class="join-prompt vertical">
               <h1>Waiting For Host...</h1>
+              <h2>${window.location.href.split("/").pop()}</h2>
             </div>
               <div class="lobby-player-list-container">
                       ${sessionState.players
