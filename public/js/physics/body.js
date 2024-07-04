@@ -125,7 +125,7 @@ export class Wall {
 export function kinematics(angle, ball, time, walls, mapsize) {
 //   console.log(players.length);
   const g = -1;
-  const rebounce = 0.5;
+  const rebounce = 0.6;
   const initialPosition = [ball.position.x, ball.position.y];
   const init = ball;
 
@@ -446,7 +446,7 @@ let distance = Math.sqrt(
   Math.pow(ball1.position.y - ball2.position.y, 2)
 );
 
-console.log(distance); // Output: 5
+// console.log(distance); // Output: 5
 
   // let ball = new Body({
   //     position: {
