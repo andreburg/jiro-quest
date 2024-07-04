@@ -10,6 +10,7 @@ const {
   getLossPage,
   getWinPage,
   spectateSession,
+  getSessions,
 } = require("../controllers/index-controller");
 const { verifyToken } = require("../middleware/cookie");
 const jwt = require("jsonwebtoken");
@@ -28,6 +29,7 @@ indexRouter.get("/join", getJoinPage);
 indexRouter.get("/signin", getSignInPage);
 indexRouter.post("/signin", signInUser);
 indexRouter.get("/lobby/:sessionId", joinSession);
+indexRouter.get("/sessions", getSessions);
 
 module.exports = {
   indexRouter,

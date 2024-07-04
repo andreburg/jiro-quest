@@ -1,4 +1,3 @@
-import { config } from "../../map.js";
 import { socket } from "../../socket/playerSocket.js";
 import LobbyHost from "../pages/host/lobby.js";
 import RoundHost from "../pages/host/round.js";

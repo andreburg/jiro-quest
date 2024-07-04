@@ -1,44 +1,42 @@
 :root {
+  /* CSS HEX */
+  --yellow: #f6fd1dff;
+  --neon-blue: #4e69fdff;
+  --aquamarine: #50ffafff;
+  --bittersweet: #ff4d4dff;
+  --tropical-indigo: #9c7bffff;
 
-      /* CSS HEX */
-    --yellow: #F6FD1Dff;
-    --neon-blue: #4E69FDff;
-    --aquamarine: #50FFAFff;
-    --bittersweet: #FF4D4Dff;
-    --tropical-indigo: #9C7BFFff;
+  --black: #000;
+  --box-shadow-large: 0.5rem 0.5rem 0 0 var(--black);
+  --box-shadow-medium: 0.25rem 0.25rem 0 0 var(--black);
+  --box-shadow-small: 0.125rem 0.125rem 0 0 var(--black);
+  --border-thick: 0.25rem solid var(--black);
+  --border-thin: 0.1rem solid var(--black);
+  --border-thin-gray: 0.1rem solid gray;
+  --headline-container-background: #f24c00;
+  --page-background: #50ffafff;
+  --page-background-alternative: #f9e900;
+  --container-background-primary: #eddfef;
+  --container-background-secondary: #f9c784;
+  --button-primary-color: #a6faff;
+  --button-danger-color: #ff6b6b;
+  --h1-size: 2rem;
+  --headline-font-size: 1.5rem;
+  --h1-weight: 800;
 
-    --black: #000;
-    --box-shadow-large: 0.5rem 0.5rem 0 0 var(--black);
-    --box-shadow-medium: 0.25rem 0.25rem 0 0 var(--black);
-    --box-shadow-small: 0.125rem 0.125rem 0 0 var(--black);
-    --border-thick: 0.25rem solid var(--black);
-    --border-thin: 0.1rem solid var(--black);
-    --border-thin-gray: 0.1rem solid gray;
-    --headline-container-background: #F24C00;
-    --page-background: #50FFAFff;
-    --page-background-alternative: #F9E900;
-    --container-background-primary: #EDDFEF;
-    --container-background-secondary: #F9C784;
-    --button-primary-color: #A6FAFF;
-    --button-danger-color: #FF6B6B;
-    --h1-size: 2rem;
-    --headline-font-size: 1.5rem;
-    --h1-weight: 800;
+  --section-header-font-size: 1.5rem;
+  --section-header-weight: 700;
 
-    --section-header-font-size: 1.5rem;
-    --section-header-weight: 700;
+  --button-large-width: 25rem;
+  --button-medium-width: 12.5rem;
+  --button-small-width: 8rem;
 
-    --button-large-width: 25rem;
-    --button-medium-width: 12.5rem;
-    --button-small-width: 8rem;
+  --input-large-width: 25rem;
+  --input-medium-width: 12.5rem;
+  --input-small-width: 8rem;
 
-    --input-large-width: 25rem;
-    --input-medium-width: 12.5rem;
-    --input-small-width: 8rem;
-
-    --border-radius: 0.8rem;
+  --border-radius: 0.8rem;
 }
-
 
 @-webkit-keyframes spin {
   100% {
@@ -180,8 +178,6 @@
   }
 }
 
-
-
 .ibm-plex-mono-thin {
   font-family: "IBM Plex Mono", monospace;
   font-weight: 100;
@@ -267,54 +263,54 @@
 }
 
 body {
-    max-width: 100%;
-    height: calc(100vh - 8rem);
-    height: calc(-webkit-fill-available - 4rem);
-    padding: 2rem;
-    font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
-    background-color: var(--page-background);
-    /* background-image: url("/public/assets/background.png"); */
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    background-size: 100% 100%;
+  max-width: 100%;
+  height: calc(100vh - 8rem);
+  height: calc(-webkit-fill-available - 4rem);
+  padding: 2rem;
+  font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+  background-color: var(--page-background);
+  /* background-image: url("/public/assets/background.png"); */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
 }
 
 input {
-    font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    padding: 0.75rem;
-    border: var(--border-thin);
-    box-shadow: var(--box-shadow-small);
-    margin: 0.5rem 0;
-    max-width: 80vw;
-    min-height: 2rem;
-    border-radius: var(--border-radius);
+  font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding: 0.75rem;
+  border: var(--border-thin);
+  box-shadow: var(--box-shadow-small);
+  margin: 0.5rem 0;
+  max-width: 80vw;
+  min-height: 2rem;
+  border-radius: var(--border-radius);
 }
 
 button {
-    font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    padding: 0.5rem;
-    border: var(--border-thin);
-    box-shadow: var(--box-shadow-small);
-    cursor: pointer;
-    margin: 1rem 0;
-    border-radius: var(--border-radius);
-    max-width: 80vw;
-    min-height: 3rem;
-    background-color: var(--tropical-indigo);
-    color: black;
+  font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  border: var(--border-thin);
+  box-shadow: var(--box-shadow-small);
+  cursor: pointer;
+  margin: 1rem 0;
+  border-radius: var(--border-radius);
+  max-width: 80vw;
+  min-height: 3rem;
+  background-color: var(--tropical-indigo);
+  color: black;
 }
 
 button:active {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 h1 {
-    font-size: 2rem;
-    font-weight: 800;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
 a {
@@ -328,97 +324,97 @@ a:visited {
 }
 
 .center-div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
-    min-height: 100%;
-    min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  min-width: 100%;
 }
 
 .button {
-    border: var(--border-thin);
-    box-shadow: var(--box-shadow-small);
-    padding: 0.5rem;
-    cursor: pointer;
-    margin: 1rem 0;
-    font-weight: 600;
-    font-size: 1.2rem;
+  border: var(--border-thin);
+  box-shadow: var(--box-shadow-small);
+  padding: 0.5rem;
+  cursor: pointer;
+  margin: 1rem 0;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .button:active {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .button-primary {
-    background-color: var(--button-primary-color);
+  background-color: var(--button-primary-color);
 }
 
 .button-danger {
-    background-color: var(--button-danger-color);
+  background-color: var(--button-danger-color);
 }
 
 .button-large {
-    width: var(--button-large-width);
+  width: var(--button-large-width);
 }
 
 .button-medium {
-    width: var(--button-medium-width)
+  width: var(--button-medium-width);
 }
 
 .button-small {
-    width: var(--button-small-width);
+  width: var(--button-small-width);
 }
 
 .button-tiny {
-    width: auto;
-    height: 0.75rem;
-    font-size: 0.75rem;
-    vertical-align: middle;
-    text-align: center;
-    text-align: center; 
-    line-height: 0.2rem;
+  width: auto;
+  height: 0.75rem;
+  font-size: 0.75rem;
+  vertical-align: middle;
+  text-align: center;
+  text-align: center;
+  line-height: 0.2rem;
 }
 
 .input {
-    border: var(--border-thin);
-    padding: 0.5rem;
-    margin: 0.5rem 0;
+  border: var(--border-thin);
+  padding: 0.5rem;
+  margin: 0.5rem 0;
 }
 
 .input-large {
-    width: var(--input-large-width);
+  width: var(--input-large-width);
 }
 
 .input-medium {
-    width: var(--input-medium-width)
+  width: var(--input-medium-width);
 }
 
 .input-small {
-    width: var(--input-small-width);
+  width: var(--input-small-width);
 }
 .label {
-    font-size: 0.8rem;
-    font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .alternate-background {
-    background-color: var(--page-background-alternative);
+  background-color: var(--page-background-alternative);
 }
 
 .header-container {
-    background-color: var(--headline-container-background);
-    margin-bottom: 2rem;
-    box-shadow: var(--box-shadow-large);
-    border: var(--border-thick);
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: var(--headline-container-background);
+  margin-bottom: 2rem;
+  box-shadow: var(--box-shadow-large);
+  border: var(--border-thick);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header-container > h1 {
-    font-size: var(--headline-font-size);
+  font-size: var(--headline-font-size);
 }
 
 .spectator-main-container {
@@ -489,7 +485,6 @@ a:visited {
 }
 
 .qr-code-container {
-
   grid-column-start: 2;
   grid-column-end: 2;
   grid-row-start: 1;
@@ -544,7 +539,8 @@ table {
   overflow: auto;
 }
 
-table td, table th {
+table td,
+table th {
   border-bottom: var(--border-thin-gray);
   padding: 0.5rem;
   font-size: 1rem;
@@ -559,7 +555,8 @@ table td, table th {
   overflow: auto;
 }
 
-.game-stats-table td, .game-stats-table th {
+.game-stats-table td,
+.game-stats-table th {
   border-bottom: var(--border-thin-gray);
   padding: 0.5rem;
   font-size: 1rem;
@@ -581,7 +578,8 @@ table td, table th {
   overflow: auto;
 }
 
-.active-games-table td, .active-games-table th {
+.active-games-table td,
+.active-games-table th {
   border-bottom: var(--border-thin-gray);
   padding: 0.5rem;
   font-size: 1rem;
@@ -618,7 +616,6 @@ table td, table th {
   width: auto;
 }
 
-
 .signin-page-container > img {
   width: 5rem;
   height: 5rem;
@@ -636,16 +633,16 @@ table td, table th {
   scale: 1.5;
   z-index: 0;
   -webkit-filter: drop-shadow(2px 2px 0 var(--neon-blue))
-                drop-shadow(-2px 2px 0 var(--neon-blue))
-                drop-shadow(2px -2px 0 var(--neon-blue))
-                drop-shadow(-2px -2px 0 var(--neon-blue))
-                drop-shadow(0 0 0px var(--neon-blue));
+    drop-shadow(-2px 2px 0 var(--neon-blue))
+    drop-shadow(2px -2px 0 var(--neon-blue))
+    drop-shadow(-2px -2px 0 var(--neon-blue))
+    drop-shadow(0 0 0px var(--neon-blue));
 
   filter: drop-shadow(2px 2px 0 var(--neon-blue))
-          drop-shadow(-2px 2px 0 var(--neon-blue))
-          drop-shadow(2px -2px 0 var(--neon-blue))
-          drop-shadow(-2px -2px 0 var(--neon-blue))
-          drop-shadow(0 0 0px var(--neon-blue));
+    drop-shadow(-2px 2px 0 var(--neon-blue))
+    drop-shadow(2px -2px 0 var(--neon-blue))
+    drop-shadow(-2px -2px 0 var(--neon-blue))
+    drop-shadow(0 0 0px var(--neon-blue));
 
   rotate: 1turn;
 
@@ -663,16 +660,16 @@ table td, table th {
   z-index: 0;
 
   -webkit-filter: drop-shadow(2px 2px 0 var(--tropical-indigo))
-                drop-shadow(-2px 2px 0 var(--tropical-indigo))
-                drop-shadow(2px -2px 0 var(--tropical-indigo))
-                drop-shadow(-2px -2px 0 var(--tropical-indigo))
-                drop-shadow(0 0 0px var(--tropical-indigo));
+    drop-shadow(-2px 2px 0 var(--tropical-indigo))
+    drop-shadow(2px -2px 0 var(--tropical-indigo))
+    drop-shadow(-2px -2px 0 var(--tropical-indigo))
+    drop-shadow(0 0 0px var(--tropical-indigo));
 
   filter: drop-shadow(2px 2px 0 var(--tropical-indigo))
-          drop-shadow(-2px 2px 0 var(--tropical-indigo))
-          drop-shadow(2px -2px 0 var(--tropical-indigo))
-          drop-shadow(-2px -2px 0 var(--tropical-indigo))
-          drop-shadow(0 0 0px var(--tropical-indigo));
+    drop-shadow(-2px 2px 0 var(--tropical-indigo))
+    drop-shadow(2px -2px 0 var(--tropical-indigo))
+    drop-shadow(-2px -2px 0 var(--tropical-indigo))
+    drop-shadow(0 0 0px var(--tropical-indigo));
 
   rotate: 1.8turn;
 }
@@ -684,17 +681,16 @@ table td, table th {
   z-index: -1;
 
   -webkit-filter: drop-shadow(2px 2px 0 var(--bittersweet))
-                drop-shadow(-2px 2px 0 var(--bittersweet))
-                drop-shadow(2px -2px 0 var(--bittersweet))
-                drop-shadow(-2px -2px 0 var(--bittersweet))
-                drop-shadow(0 0 0px var(--bittersweet));
+    drop-shadow(-2px 2px 0 var(--bittersweet))
+    drop-shadow(2px -2px 0 var(--bittersweet))
+    drop-shadow(-2px -2px 0 var(--bittersweet))
+    drop-shadow(0 0 0px var(--bittersweet));
 
   filter: drop-shadow(2px 2px 0 var(--bittersweet))
-          drop-shadow(-2px 2px 0 var(--bittersweet))
-          drop-shadow(2px -2px 0 var(--bittersweet))
-          drop-shadow(-2px -2px 0 var(--bittersweet))
-          drop-shadow(0 0 0px var(--bittersweet));
-
+    drop-shadow(-2px 2px 0 var(--bittersweet))
+    drop-shadow(2px -2px 0 var(--bittersweet))
+    drop-shadow(-2px -2px 0 var(--bittersweet))
+    drop-shadow(0 0 0px var(--bittersweet));
 
   -webkit-animation: none;
   -moz-animation: none;
@@ -758,40 +754,30 @@ table td, table th {
 
   /* filter */
   -webkit-filter: drop-shadow(2px 2px 0 var(--black))
-                drop-shadow(-2px 2px 0 var(--black))
-                drop-shadow(2px -2px 0 var(--black))
-                drop-shadow(-2px -2px 0 var(--black))
-                drop-shadow(0 0 0px var(--black));
+    drop-shadow(-2px 2px 0 var(--black)) drop-shadow(2px -2px 0 var(--black))
+    drop-shadow(-2px -2px 0 var(--black)) drop-shadow(0 0 0px var(--black));
 
   filter: drop-shadow(2px 2px 0 var(--black))
-          drop-shadow(-2px 2px 0 var(--black))
-          drop-shadow(2px -2px 0 var(--black))
-          drop-shadow(-2px -2px 0 var(--black))
-          drop-shadow(0 0 0px var(--black));
-
-
+    drop-shadow(-2px 2px 0 var(--black)) drop-shadow(2px -2px 0 var(--black))
+    drop-shadow(-2px -2px 0 var(--black)) drop-shadow(0 0 0px var(--black));
 }
 
 .host-page-container > img:nth-child(1) {
   position: absolute;
   top: 0;
   left: 0;
-  
+
   width: 6rem;
   height: 6rem;
 
   z-index: 1;
-  -webkit-filter: drop-shadow(2px 2px 0 black)
-                drop-shadow(-2px 2px 0 black)
-                drop-shadow(2px -2px 0 black)
-                drop-shadow(-2px -2px 0 black)
-                drop-shadow(0 0 0px black);
+  -webkit-filter: drop-shadow(2px 2px 0 black) drop-shadow(-2px 2px 0 black)
+    drop-shadow(2px -2px 0 black) drop-shadow(-2px -2px 0 black)
+    drop-shadow(0 0 0px black);
 
-  filter: drop-shadow(2px 2px 0 black)
-          drop-shadow(-2px 2px 0 black)
-          drop-shadow(2px -2px 0 black)
-          drop-shadow(-2px -2px 0 black)
-          drop-shadow(0 0 0px black);
+  filter: drop-shadow(2px 2px 0 black) drop-shadow(-2px 2px 0 black)
+    drop-shadow(2px -2px 0 black) drop-shadow(-2px -2px 0 black)
+    drop-shadow(0 0 0px black);
 
   rotate: 1turn;
 
@@ -955,4 +941,71 @@ table td, table th {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+}
+
+.active-session-list-item-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.active-session-list-item-horizontal {
+  display: flex;
+  gap: 1rem;
+}
+
+.active-session-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  border: var(--border-thin);
+  box-shadow: var(--box-shadow-small);
+  margin: 1rem 0;
+  border-radius: var(--border-radius);
+  max-width: 80vw;
+  min-height: 3rem;
+  background-color: white;
+  color: black;
+}
+
+.active-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow: scroll;
+}
+
+.active-sessions-list-table {
+}
+
+.active-session-list-item-host-user {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--bittersweet);
+  border-radius: var(--border-radius);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.active-session-list-item-join {
+  border-radius: var(--border-radius);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  background-color: aquamarine;
+  height: min-content;
+}
+
+.active-session-list-item-spectate {
+  border-radius: var(--border-radius);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  background-color: #f9e900;
+  height: min-content;
 }

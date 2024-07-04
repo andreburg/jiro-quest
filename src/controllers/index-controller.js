@@ -55,6 +55,19 @@ const joinSession = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
+const getSessions = async (req, res) => {
+  res.status(200).json(
+    Array.from(sessions).map(([key, value]) => ({
+      sessionId: key,
+      session: value,
+    }))
+  );
+};
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
 const spectateSession = async (req, res) => {
   const { sessionId } = req.params;
   if (sessions.get(sessionId)) {
@@ -133,4 +146,5 @@ module.exports = {
   getLossPage,
   getWinPage,
   spectateSession,
+  getSessions,
 };

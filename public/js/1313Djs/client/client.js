@@ -4,7 +4,6 @@ import RoundStart from "../pages/general/round-start.js";
 import RoundEnd from "../pages/general/round-end.js";
 import GameEnd from "../pages/general/game-end.js";
 import Router from "../router/router.js";
-import { socket } from "../../socket/playerSocket.js";
 
 export default class Client {
   constructor() {
@@ -19,10 +18,10 @@ export default class Client {
     this.route();
   }
 
-  route = () => {
+  route = async () => {
     console.log(session.state);
     let route = this.router.loadRoute(session.state);
-    app.innerHTML = route.comp.getHtml();
+    app.innerHTML = await route.comp.getHtml();
     route.comp.sideEffects();
   };
 }

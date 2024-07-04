@@ -34,6 +34,7 @@ const onSocketConnection = (io) => (socket) => {
 /** @param {SocketServer} io @param {Socket} socket @returns {(payload: Object) => void} */
 const onSpectateSession = (io, socket) => (payload) => {
   socket.join(payload.sessionId);
+  console.log(payload.sessionId);
   const session = sessions.get(payload.sessionId);
   io.in(payload.sessionId).emit("sessionStateChange", { session });
 };

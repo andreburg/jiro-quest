@@ -18,20 +18,23 @@
         <h1>Join Lobby</h1>
       </div>
       <div>
-          <input
-            placeholder="Lobby Code"
-            id="sessionId"
-            class="input input-large"
-          />
+        <input
+          placeholder="Lobby Code"
+          id="sessionId"
+          class="input input-large"
+        />
       </div>
 
       <div class="right-aligned-button-group">
-        <button id="joinButton" class="">
-          Join
-        </button>
+        <button id="joinButton" class="">Join</button>
         <a href="/">
           <button class="button-danger">Leave</button>
-          </a>
+        </a>
+      </div>
+
+      <div class="active-sessions-list-table">
+        <h1>active sessions</h1>
+        <div id="active-sessions-list"></div>
       </div>
       <script>
         function joinGame() {
@@ -41,8 +44,46 @@
           }
         }
 
-                      document.getElementById("joinButton").addEventListener("click", joinGame);
-                    </script>
+        document
+          .getElementById("joinButton")
+          .addEventListener("click", joinGame);
+
+        fetch("/sessions").then((res) => {
+          res.json().then((data) => {
+            const activeSessionsList = document.getElementById(
+              "active-sessions-list"
+            );
+
+            for (session of data) {
+              const sessionElement = document.createElement("div");
+              sessionElement.innerHTML = `
+                        <div class="active-session-list-item">
+                          <div class="active-session-list-item-vertical">
+                            <div class="active-session-list-item-id">
+                              ${session.sessionId}
+                            </div>
+                            <div class="active-session-list-item-host-user">
+                              ${session.session.hostUsername}
+                            </div>
+                          </div>
+                          <div class="active-session-list-item-horizontal">
+                          ${
+                            session.session.players.length < 4
+                              ? `  <div class="active-session-list-item-join" onclick="(() => {window.location.pathname = '/lobby/${session.sessionId}'})()">Join</div>
+        `
+                              : "<div></div>"
+                          }
+                              <div class="active-session-list-item-spectate" onclick="(() => {window.location.pathname = '/lobby/${
+                                session.sessionId
+                              }/spectate'})()">Spectate</div>
+                          <div>
+                        </div>
+                      `;
+              activeSessionsList.appendChild(sessionElement);
+            }
+          });
+        });
+      </script>
     </main>
   </body>
 </html>

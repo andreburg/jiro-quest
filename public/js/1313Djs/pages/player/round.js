@@ -61,7 +61,7 @@ export default class RoundPlayer extends Page {
     }, 100);
   }
 
-  getHtml() {
+  async getHtml() {
     return `
       <div class="layered-canvases-container">
         <div id="unit-map-area" class="user-map-container">

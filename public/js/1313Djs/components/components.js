@@ -17,12 +17,12 @@ export default class Components {
     return c.component;
   }
 
-  render(name) {
+  async render(name) {
     let c = this.comps.find((c) => c.name == name);
     if (!c) {
       c = new Component();
     }
-    return c.component.getHtml();
+    return await c.component.getHtml();
   }
 
   loadComponents() {

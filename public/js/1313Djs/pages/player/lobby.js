@@ -17,7 +17,7 @@ export default class LobbyPlayer extends Page {
       );
   }
 
-  getHtml() {
+  async getHtml() {
     return `
           <div class="center-div host-page-container">
             <img src="/public/assets/brutalism/Brutalist 79.png" alt="random illustration" />
