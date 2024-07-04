@@ -273,7 +273,7 @@ body {
     padding: 2rem;
     font-family: "IBM Plex Mono", monospace, Arial, Helvetica, sans-serif;
     background-color: var(--page-background);
-    background-image: url("/public/assets/background.png");
+    /* background-image: url("/public/assets/background.png"); */
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: 100% 100%;
