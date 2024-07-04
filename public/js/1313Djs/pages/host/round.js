@@ -8,7 +8,7 @@ import {
   gameLoop,
 } from "../../../map.js";
 import Page from "../page.js";
-import { session, game } from "../../client/client.js";
+import { session, game, escapeHTML } from "../../client/client.js";
 import { confg } from "../../state/config.js";
 
 export default class RoundHost extends Page {
@@ -73,7 +73,9 @@ export default class RoundHost extends Page {
         <div class="player-stats-container"
         style="background-color: ${player.ball.colour}"
         >
-          <div class="player-stats-username">${player.username}</div>
+          <div class="player-stats-username">${escapeHTML(
+            player.username
+          )}</div>
           <div class="player-stats-score">${player.score}</div>
         </div>
         `;

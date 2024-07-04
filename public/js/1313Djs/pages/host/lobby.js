@@ -1,5 +1,5 @@
 import { initializeGyroscope } from "../../../map.js";
-import { game, session } from "../../client/client.js";
+import { escapeHTML, game, session } from "../../client/client.js";
 import Page from "../page.js";
 export default class LobbyHost extends Page {
   constructor(params) {
@@ -58,7 +58,7 @@ export default class LobbyHost extends Page {
                       }">
                         <div class="lobby-player-list-item-vertical">
                           <div class="lobby-player-list-item-username">
-                            ${player.username}
+                            ${escapeHTML(player.username)}
                           </div>
                           <div class="lobby-player-list-item-ready">
                             ${player.ready ? "Ready" : "Not Ready"}
@@ -67,7 +67,9 @@ export default class LobbyHost extends Page {
                         ${
                           player.username !== session.state.hostUsername
                             ? `                         
-                      <div class="kick-player-button" id="kick-player-button-${player.username}">
+                      <div class="kick-player-button" id="kick-player-button-${escapeHTML(
+                        player.s
+                      )}">
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="9" cy="9" r="8.5" fill="#FF6B6B" stroke="black"/>
                           <line x1="6" y1="9" x2="12" y2="9" stroke="black" stroke-width="2"/>

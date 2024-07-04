@@ -1,5 +1,5 @@
 import { initializeGyroscope } from "../../../map.js";
-import { session } from "../../client/client.js";
+import { escapeHTML, session } from "../../client/client.js";
 import Page from "../page.js";
 
 export default class LobbySpectator extends Page {
@@ -25,7 +25,7 @@ export default class LobbySpectator extends Page {
                             }">
                               <div class="lobby-player-list-item-vertical">
                                 <div class="lobby-player-list-item-username">
-                                  ${player.username}
+                                  ${escapeHTML(player.username)}
                                 </div>
                                 <div class="lobby-player-list-item-ready">
                                   ${player.ready ? "Ready" : "Not Ready"}

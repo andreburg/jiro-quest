@@ -5,6 +5,15 @@ import RoundEnd from "../pages/general/round-end.js";
 import GameEnd from "../pages/general/game-end.js";
 import Router from "../router/router.js";
 
+export function escapeHTML(unsafeHTML) {
+  return unsafeHTML
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export default class Client {
   constructor() {
     this.router = new Router([

@@ -74,7 +74,6 @@ const onGameStateChange = (io, socket) => (payload) => {
   jwt.verify(socket.request.cookies.token, JWT_SECRET, (error, tokenData) => {
     username = tokenData?.username;
   });
-
   const userSession = getUserSession(username);
   io.in(userSession).emit("gameStateChange", { game: payload.game });
 };

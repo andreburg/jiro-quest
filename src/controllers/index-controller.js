@@ -1,6 +1,4 @@
 const { Request, Response } = require("express");
-const { get } = require("http");
-const fs = require("fs").promises;
 const path = require("path");
 const { users } = require("../lib/users");
 const jwt = require("jsonwebtoken");
@@ -19,9 +17,6 @@ const getHomePage = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
-const getGamePage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/player/game.html"));
-};
 const createSession = async (req, res) => {
   const sessionId = generateUID();
   sessions.set(sessionId, {
@@ -105,46 +100,19 @@ const signInUser = async (req, res) => {
   const { username } = req.body;
   if (!users.has(username)) {
     const token = jwt.sign({ username }, JWT_SECRET);
+    users.set(username, null);
     res.cookie("token", token, { httpOnly: true });
     res.redirect("/");
   }
-};
-
-/**
- * @param {Request} req
- * @param {Response} res
- */
-const getSpectatorPage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/spectator/index.html"));
-};
-
-/**
- * @param {Request} req
- * @param {Response} res
- */
-const getLossPage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/endings/lose.html"));
-};
-
-/**
- * @param {Request} req
- * @param {Response} res
- */
-const getWinPage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/endings/win.html"));
 };
 
 module.exports = {
   createSession,
   getJoinPage,
   getHomePage,
-  getGamePage,
-  getSpectatorPage,
   getSignInPage,
   signInUser,
   joinSession,
-  getLossPage,
-  getWinPage,
   spectateSession,
   getSessions,
 };

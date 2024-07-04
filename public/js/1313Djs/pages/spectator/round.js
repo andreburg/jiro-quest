@@ -5,7 +5,7 @@ import {
   drawGoal,
   drawMaze,
 } from "../../../map.js";
-import { session, game } from "../../client/client.js";
+import { session, game, escapeHTML } from "../../client/client.js";
 import Page from "../page.js";
 export default class RoundSpectator extends Page {
   constructor(params) {
@@ -36,7 +36,9 @@ export default class RoundSpectator extends Page {
         <div class="player-stats-container"
         style="background-color: ${player.ball.colour}"
         >
-          <div class="player-stats-username">${player.username}</div>
+          <div class="player-stats-username">${escapeHTML(
+            player.username
+          )}</div>
           <div class="player-stats-score">${player.score}</div>
         </div>
         `;

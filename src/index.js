@@ -10,8 +10,6 @@ const bodyParser = require("body-parser");
 
 const { onSocketConnection } = require("./controllers/socket-controller");
 const { indexRouter } = require("./routes");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("./lib/utils");
 
 const PORT = process.env.PORT || 3000;
 

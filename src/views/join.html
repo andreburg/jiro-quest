@@ -57,29 +57,34 @@
             for (session of data) {
               const sessionElement = document.createElement("div");
               sessionElement.innerHTML = `
-                        <div class="active-session-list-item">
-                          <div class="active-session-list-item-vertical">
-                            <div class="active-session-list-item-id">
-                              ${session.sessionId}
+                            <div class="active-session-list-item">
+                              <div class="active-session-list-item-vertical">
+                                <div class="active-session-list-item-id">
+                                  ${session.sessionId}
+                                </div>
+                                <div class="active-session-list-item-host-user">
+                                  ${session.session.hostUsername
+                                    .replace(/&/g, "&amp;")
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/"/g, "&quot;")
+                                    .replace(/'/g, "&#039;")}
+                                </div>
+                              </div>
+                              <div class="active-session-list-item-horizontal">
+                              ${
+                                session.session.players.length < 4 &&
+                                session.session.route === "lobby"
+                                  ? `  <div class="active-session-list-item-join" onclick="(() => {window.location.pathname = '/lobby/${session.sessionId}'})()">Join</div>
+            `
+                                  : "<div></div>"
+                              }
+                                  <div class="active-session-list-item-spectate" onclick="(() => {window.location.pathname = '/lobby/${
+                                    session.sessionId
+                                  }/spectate'})()">Spectate</div>
+                              <div>
                             </div>
-                            <div class="active-session-list-item-host-user">
-                              ${session.session.hostUsername}
-                            </div>
-                          </div>
-                          <div class="active-session-list-item-horizontal">
-                          ${
-                            session.session.players.length < 4 &&
-                            session.session.route === "lobby"
-                              ? `  <div class="active-session-list-item-join" onclick="(() => {window.location.pathname = '/lobby/${session.sessionId}'})()">Join</div>
-        `
-                              : "<div></div>"
-                          }
-                              <div class="active-session-list-item-spectate" onclick="(() => {window.location.pathname = '/lobby/${
-                                session.sessionId
-                              }/spectate'})()">Spectate</div>
-                          <div>
-                        </div>
-                      `;
+                          `;
               activeSessionsList.appendChild(sessionElement);
             }
           });

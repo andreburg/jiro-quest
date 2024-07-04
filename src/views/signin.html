@@ -26,16 +26,14 @@
         <button type="submit">Confirm</button>
       </form>
     </main>
-<script>
-  const input = document.getElementById('username');
-  input.addEventListener('onchange', (e) => {
-    if (input.validity.valid) {
-
-    } else {
-      input.setCustomValidity('Please enter a username');
-    }
-  });
-
-</script>
+    <script>
+      const input = document.getElementById("username");
+      input.addEventListener("onchange", (e) => {
+        if (input.validity.valid) {
+        } else {
+          input.setCustomValidity("Please enter a username");
+        }
+      });
+    </script>
   </body>
 </html>

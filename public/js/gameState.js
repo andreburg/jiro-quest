@@ -85,7 +85,7 @@ function generateRandomColorString() {
     "#3357FF", // Bright Blue
     "#7D33FF", // Violet
     "#FF33BD", // Hot Pink
-    "#FF3375"  // Coral Pink
+    "#FF3375", // Coral Pink
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }

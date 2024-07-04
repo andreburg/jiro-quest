@@ -1,6 +1,5 @@
 const { Server: SocketServer, Socket } = require("socket.io");
 const { sessions, getUserSession } = require("./sessions.js");
-const { getUsername } = require("./users.js");
 const jwt = require("jsonwebtoken");
 
 const generateUID = () => {
