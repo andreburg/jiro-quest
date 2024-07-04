@@ -6,7 +6,9 @@ const {
   signInUser,
   joinSession,
   getGamePage,
-  getSpectatorPage
+  getSpectatorPage,
+  getLossPage,
+  getWinPage,
 } = require("../controllers/index-controller");
 const { verifyToken } = require("../middleware/cookie");
 const jwt = require("jsonwebtoken");
@@ -14,6 +16,8 @@ const indexRouter = require("express").Router();
 
 indexRouter.use(verifyToken);
 indexRouter.get("/", getHomePage);
+indexRouter.get("/loss", getLossPage);
+indexRouter.get("/win", getWinPage);
 indexRouter.get("/player/game", getGamePage);
 indexRouter.get("/spectator/:lobbyId", getSpectatorPage);
 indexRouter.get("/player/game", getGamePage);

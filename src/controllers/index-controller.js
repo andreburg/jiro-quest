@@ -91,6 +91,22 @@ const getSpectatorPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/spectator/index.html"));
 };
 
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+const getLossPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/endings/lose.html"));
+};
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+const getWinPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/endings/win.html"));
+};
+
 module.exports = {
   createSession,
   getJoinPage,
@@ -100,4 +116,6 @@ module.exports = {
   getSignInPage,
   signInUser,
   joinSession,
+  getLossPage,
+  getWinPage
 };

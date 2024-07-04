@@ -936,3 +936,23 @@ table td, table th {
   top: 0;
   left: 0;
 }
+
+.white-background {
+  background-color: white;
+}
+
+.lose-background {
+  background-color: var(--bittersweet);
+  background-image: url("/public/assets/lose.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.win-background {
+  background-color: var(--aquamarine);
+  background-image: url("/public/assets/win.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
