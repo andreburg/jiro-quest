@@ -67,7 +67,7 @@ export class Player {
       position: position,
       velocity: new Vector({ x: 0, y: 0, z: 0 }),
       acceleration: new Vector({ x: 0, y: 0, z: 0 }),
-      radius: 0.1,
+      radius: 0.2,
       colour: generateRandomColorString(),
     });
     this.score = 0;

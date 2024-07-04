@@ -50,14 +50,14 @@ export function drawMaze(canvas, config) {
       const yPos = y;
       if (cell.N) {
         ctx.beginPath();
-        ctx.moveTo(xPos * config.scale, yPos * config.scale);
-        ctx.lineTo((xPos + 1) * config.scale, yPos * config.scale);
+        ctx.moveTo((xPos-0.1) * config.scale, yPos * config.scale);
+        ctx.lineTo((xPos + 1.1) * config.scale, yPos * config.scale);
         ctx.stroke();
       }
       if (cell.W) {
         ctx.beginPath();
-        ctx.moveTo(xPos * config.scale, yPos * config.scale);
-        ctx.lineTo(xPos * config.scale, (yPos + 1) * config.scale);
+        ctx.moveTo(xPos * config.scale, (yPos-0.1) * config.scale);
+        ctx.lineTo(xPos * config.scale, (yPos + 1.1) * config.scale);
         ctx.stroke();
       }
     });
@@ -112,7 +112,7 @@ export function drawGoal(canvas, config, player) {
   const x = (config.mazeSize * config.scale) / 2;
   const y = x;
   const radius = player.ball.radius * config.scale;
-  const goalRadius = radius * 4;
+  const goalRadius = radius * 3;
   const mapColour = "white";
   console.log(!!canvas)
 
