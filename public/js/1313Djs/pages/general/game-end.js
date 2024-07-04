@@ -40,7 +40,7 @@ export default class GameEnd extends Page {
                     <h1>🥲 You Lose! 😭</h1>
                   </div>
                   <div class="">
-                    button class="button-large" onclick="window.location.href='/';">
+                    <button class="button-large" onclick="window.location.href='/';">
                       Home
                     </button>
                   </div>
