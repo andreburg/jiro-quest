@@ -50,14 +50,14 @@ export function drawMaze(canvas, config) {
       const yPos = y;
       if (cell.N) {
         ctx.beginPath();
-        ctx.moveTo(xPos * config.scale, yPos * config.scale);
-        ctx.lineTo((xPos + 1) * config.scale, yPos * config.scale);
+        ctx.moveTo((xPos - 0.1) * config.scale, yPos * config.scale);
+        ctx.lineTo((xPos + 1.1) * config.scale, yPos * config.scale);
         ctx.stroke();
       }
       if (cell.W) {
         ctx.beginPath();
-        ctx.moveTo(xPos * config.scale, yPos * config.scale);
-        ctx.lineTo(xPos * config.scale, (yPos + 1) * config.scale);
+        ctx.moveTo(xPos * config.scale, (yPos - 0.1) * config.scale);
+        ctx.lineTo(xPos * config.scale, (yPos + 1.1) * config.scale);
         ctx.stroke();
       }
     });
@@ -97,8 +97,8 @@ export function drawBall(player, config, canvas) {
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = player.ball.colour;
   ctx.fill();
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = "black";
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = player.ball.colour;
   ctx.stroke();
   ctx.lineWidth = 5;
   ctx.shadowBlur = 0;
@@ -112,14 +112,14 @@ export function drawGoal(canvas, config, player) {
   const x = (config.mazeSize * config.scale) / 2;
   const y = x;
   const radius = player.ball.radius * config.scale;
-  const goalRadius = radius * 4;
-  const mapColour = "white";
+  const goalRadius = radius * 2;
+  const mapColour = "grey";
   console.log(!!canvas);
 
   const ctx = canvas.getContext("2d");
   //   cxt.clearRect(0, 0, canvas.width, canvas.height);
 
-  const grd = ctx.createRadialGradient(x, y, radius * 1.5, x, y, goalRadius);
+  const grd = ctx.createRadialGradient(x, y, radius, x, y, goalRadius);
   grd.addColorStop(0, "black");
   grd.addColorStop(1, mapColour);
 
@@ -135,7 +135,7 @@ export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
   const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
   const time = 0.1;
-  const angleW = 0.9;
+  const angleW = 0.6;
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;

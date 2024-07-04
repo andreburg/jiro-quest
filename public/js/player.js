@@ -99,6 +99,7 @@ const render = {
       const ballCanvas = createUnitMapArea(ballArea);
 
       const updateGameStats = (gameState) => {
+        
         // NOTE: the following code just updates the player stats
         // We can take this out if its messing with the socket or the performance
         // START: player stats
@@ -108,6 +109,7 @@ const render = {
         playerStatsContainer.innerHTML = "";
 
         gameState.players.forEach((player) => {
+            console.log(player.score)
           const playerStats = document.createElement("div");
 
           playerStats.innerHTML = `

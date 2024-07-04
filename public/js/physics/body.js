@@ -249,9 +249,12 @@ export function collision(ball1, ball2,time,mapsize) {
 
 export function endGame(players, config) {
     players.forEach((player) => {
-        if (Math.sqrt(Math.pow(player.ball.position.x - config.mazeSize/2, 2) + Math.pow(player.ball.position.y - config.mazeSize/2, 2)) <= 5*player.ball.radius) {
-            player.score += config.score;
-            config.score -= 1;
+        console.log(player.score)
+        if (Math.sqrt(Math.pow(player.ball.position.x - config.mazeSize/2, 2) + Math.pow(player.ball.position.y - config.mazeSize/2, 2)) <= 1.5*player.ball.radius) {
+            // if (Math.sqrt(Math.pow(player.ball.position.x - 1/2, 2) + Math.pow(player.ball.position.y - 1/2, 2)) <= 3*player.ball.radius) {
+            if(player.score===0){
+            player.score = config.score;
+            config.score -= 1;}
             player.angleWeight = 0;
         }})}
 

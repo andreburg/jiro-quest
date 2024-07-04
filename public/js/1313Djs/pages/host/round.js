@@ -89,9 +89,10 @@ export default class RoundHost extends Page {
       if (firstRender) {
         drawMaze(mapCanvas, gameState.config);
         drawGoal(mapCanvas, gameState.config, gameState.players[0]);
-        updateGameStats(gameState);
         firstRender = false;
       }
+      updateGameStats(gameState);
+      // console.log(gameState.players[0].score)
     });
 
     session.socket.on("playerOrientationChange", ({ username, angles }) => {
