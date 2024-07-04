@@ -1,5 +1,12 @@
 import { Player } from "../../../gameState.js";
-import { angles, createUnitMapArea, drawGame, gameLoop } from "../../../map.js";
+import {
+  angles,
+  createUnitMapArea,
+  drawGame,
+  drawGoal,
+  drawMaze,
+  gameLoop,
+} from "../../../map.js";
 import Page from "../page.js";
 import { session } from "../../client/client.js";
 import { confg } from "../../state/config.js";
@@ -10,28 +17,37 @@ export default class RoundHost extends Page {
   }
 
   sideEffects() {
-    console.log(confg.config);
     let gameState;
     let firstRender = true;
     const mapArea = document.querySelector("#unit-map-area");
-    const canvas = createUnitMapArea(mapArea);
+    const mapCanvas = createUnitMapArea(mapArea);
+    const ballArea = document.querySelector("#ball-canvas-container");
+    const ballCanvas = createUnitMapArea(ballArea);
 
     let players = session.state.players.map((player, index) => {
-      const assignedCoordinates = [
-        { x: 0.5, y: 0.5, z: 0 },
-        { x: 0.5, y: confg.config.mazeSize - 0.5, z: 0 },
-        { x: confg.config.mazeSize - 0.5, y: 0.5, z: 0 },
-        {
-          x: confg.config.mazeSize - 0.5,
-          y: confg.config.mazeSize - 0.5,
-          z: 0,
-        },
-      ];
-      let startPositions = assignedCoordinates[index] || {
-        x: 0.5,
-        y: 0.5,
-        z: 0.5,
-      };
+      let startPositions = {};
+      switch (index) {
+        case 0:
+          startPositions = { x: 0.5, y: 0.5, z: 0 };
+          break;
+        case 1:
+          startPositions = { x: 0.5, y: confg.config.mazeSize - 0.5, z: 0 };
+          break;
+        case 2:
+          startPositions = { x: confg.config.mazeSize - 0.5, y: 0.5, z: 0 };
+          break;
+        case 3:
+          startPositions = {
+            x: confg.config.mazeSize - 0.5,
+            y: confg.config.mazeSize - 0.5,
+            z: 0,
+          };
+          break;
+        default:
+          startPositions = { x: 0.5, y: 0.5, z: 0.5 };
+          break;
+      }
+      console.log(startPositions);
       return new Player({
         username: player.username,
         position: startPositions,
@@ -69,8 +85,10 @@ export default class RoundHost extends Page {
 
     session.socket.on("gameStateChange", ({ game }) => {
       gameState = { ...gameState, ...game };
-      drawGame(canvas, gameState);
+      drawGame(ballCanvas, gameState);
       if (firstRender) {
+        drawMaze(mapCanvas, gameState.config);
+        drawGoal(mapCanvas, gameState.config, gameState.players[0]);
         updateGameStats(gameState);
         firstRender = false;
       }
@@ -90,8 +108,14 @@ export default class RoundHost extends Page {
 
   getHtml() {
     return `
-      <div id="unit-map-area" class="user-map-container"></div>
-      <div id="live-stats-container"></div>
-        `;
+    <div class="layered-canvases-container">
+      <div id="unit-map-area" class="user-map-container">
+      </div>
+      <div id="ball-canvas-container" class="user-ball-container">
+      </div>
+    </div>
+    <div id="live-stats-container">
+    </div>
+    `;
   }
 }

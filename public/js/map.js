@@ -32,6 +32,7 @@ function drawRectangle(canvas) {
 
 export function drawMaze(canvas, config) {
   const ctx = canvas.getContext("2d");
+  cxt.clearRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = "black";
   ctx.shadowColor = "rgba(0, 0, 0, 1)";
   ctx.shadowBlur = 10;
@@ -115,6 +116,7 @@ export function drawGoal(canvas, config, player) {
   const mapColour = "white";
 
   const ctx = canvas.getContext("2d");
+  cxt.clearRect(0, 0, canvas.width, canvas.height);
 
   const grd = ctx.createRadialGradient(x, y, radius * 1.5, x, y, goalRadius);
   grd.addColorStop(0, "black");
