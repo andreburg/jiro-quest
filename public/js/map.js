@@ -97,8 +97,8 @@ export function drawBall(player, config, canvas) {
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.fillStyle = player.ball.colour;
   ctx.fill();
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = "black";
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = player.ball.colour;
   ctx.stroke();
   ctx.lineWidth = 5;
   ctx.shadowBlur = 0;
@@ -112,14 +112,14 @@ export function drawGoal(canvas, config, player) {
   const x = (config.mazeSize * config.scale) / 2;
   const y = x;
   const radius = player.ball.radius * config.scale;
-  const goalRadius = radius * 3;
-  const mapColour = "white";
+  const goalRadius = radius * 2;
+  const mapColour = "grey";
   console.log(!!canvas)
 
   const ctx = canvas.getContext("2d");
 //   cxt.clearRect(0, 0, canvas.width, canvas.height);
 
-  const grd = ctx.createRadialGradient(x, y, radius * 1.5, x, y, goalRadius);
+  const grd = ctx.createRadialGradient(x, y, radius , x, y, goalRadius);
   grd.addColorStop(0, "black");
   grd.addColorStop(1, mapColour);
 
