@@ -18,7 +18,6 @@ socket.on("disconnected", () => {
 });
 
 socket.on("sessionStateChange", ({ session }) => {
-  console.log(session);
   sessionState = session;
   render[sessionState.status].load(sessionState);
 });
@@ -34,11 +33,11 @@ const render = {
               <h2>${window.location.href.split("/").pop()}</h2>
             </div>
               <div class="lobby-player-list-container">
-                      ${sessionState.players
-          .map((player, i) => {
-
-            return `
-                            <div class="lobby-player-list-item ${player.ready ? "ready" : ""}">
+                      ${sessionState.players.map((player, i) => {
+                        return `
+                            <div class="lobby-player-list-item ${
+                              player.ready ? "ready" : ""
+                            }">
                               <div class="lobby-player-list-item-vertical">
                                 <div class="lobby-player-list-item-username">
                                   ${player.username}
@@ -50,7 +49,7 @@ const render = {
                           </div>
 
                           `;
-          })}
+                      })}
               </div>
               <div class="right-aligned-button-group">
                   ${
@@ -59,8 +58,8 @@ const render = {
                     )?.ready
                       ? ""
                       : `
-                                  <button id="readyButton">Ready Up</button>
-                                  `
+                      <button id="readyButton">Ready Up</button>
+                        `
                   }  
                   <button class="button-danger" onclick={}>Exit</button>
               </div>
@@ -103,7 +102,9 @@ const render = {
         // NOTE: the following code just updates the player stats
         // We can take this out if its messing with the socket or the performance
         // START: player stats
-        const playerStatsContainer = document.getElementById("live-stats-container");
+        const playerStatsContainer = document.getElementById(
+          "live-stats-container"
+        );
         playerStatsContainer.innerHTML = "";
 
         gameState.players.forEach((player) => {
@@ -120,7 +121,7 @@ const render = {
           playerStatsContainer.appendChild(playerStats);
         });
         // END: player stats
-      }
+      };
 
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
@@ -128,9 +129,9 @@ const render = {
         if (firstRender) {
           drawMaze(mapCanvas, gameState.config);
           drawGoal(mapCanvas, gameState.config, gameState.players[0]);
-          updateGameStats(gameState)
+          updateGameStats(gameState);
           firstRender = false;
-        };
+        }
       });
 
       let streamDeviceOrientation = setInterval(() => {

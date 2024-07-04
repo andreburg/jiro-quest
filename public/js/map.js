@@ -131,8 +131,8 @@ export function drawGoal(canvas, config, player) {
 export const gameLoop = (config, players, socket) => () => {
   // updating physical state in memory
   const a = new Physics.Angle({ alpha: 0, beta: 0, gamma: 0 });
-  const time =0.1;
-  const angleW = 0.9
+  const time = 0.1;
+  const angleW = 0.9;
   players.forEach((player) => {
     a.alpha = player.angles.alpha + a.alpha;
     a.beta = player.angles.beta + a.beta;
@@ -140,11 +140,17 @@ export const gameLoop = (config, players, socket) => () => {
   });
   a.alpha = a.alpha / players.length;
   a.beta = a.beta / players.length;
-    players.forEach((player) => {
-        player.angles.alpha = (angleW*a.alpha+(1-angleW)*player.angles.alpha)*player.angleWeight;
-        player.angles.beta = (angleW*a.beta+(1-angleW)*player.angles.beta)*player.angleWeight;
-        player.angles.gamma = (angleW*a.gamma+(1-angleW)*player.angles.gamma)*player.angleWeight;
-    });
+  players.forEach((player) => {
+    player.angles.alpha =
+      (angleW * a.alpha + (1 - angleW) * player.angles.alpha) *
+      player.angleWeight;
+    player.angles.beta =
+      (angleW * a.beta + (1 - angleW) * player.angles.beta) *
+      player.angleWeight;
+    player.angles.gamma =
+      (angleW * a.gamma + (1 - angleW) * player.angles.gamma) *
+      player.angleWeight;
+  });
   players.forEach((player) => {
     // console.log(player.angles)
     Physics.kinematics(
@@ -154,14 +160,11 @@ export const gameLoop = (config, players, socket) => () => {
       config.walls,
       config.mazeSize
     );
-//     players.forEach((otherPlayer) => {
-//         Physics.collision(player.ball, otherPlayer.ball, time, config.mazeSize);
-//   })
-}
-
-
-);
-Physics.endGame(players, config);
+    //     players.forEach((otherPlayer) => {
+    //         Physics.collision(player.ball, otherPlayer.ball, time, config.mazeSize);
+    //   })
+  });
+  Physics.endGame(players, config);
 
   const gameState = new State({
     roundOver: false,
@@ -183,7 +186,11 @@ export const drawGame = (canvas, gameState) => {
   cxt.clearRect(0, 0, canvas.width, canvas.height);
   // drawMaze(canvas, config);
   // drawGoal(canvas, config, players[0]);
-  players.forEach((player) => {if(player.angleWeight===1){drawBall(player, config, canvas)}});
+  players.forEach((player) => {
+    if (player.angleWeight === 1) {
+      drawBall(player, config, canvas);
+    }
+  });
 };
 
 export const angles = {

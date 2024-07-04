@@ -17,6 +17,10 @@ export default class Player extends Client {
       session.state = newSession;
       this.route();
     });
+
+    socket.on("disconnected", () => {
+      window.location.pathname = "/";
+    });
   }
 }
 

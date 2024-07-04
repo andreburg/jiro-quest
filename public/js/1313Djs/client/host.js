@@ -1,7 +1,9 @@
+import { config } from "../../map.js";
 import { socket } from "../../socket/playerSocket.js";
 import LobbyHost from "../pages/host/lobby.js";
 import RoundHost from "../pages/host/round.js";
 import Route from "../router/route.js";
+import { confg, getNewConfig } from "../state/config.js";
 import Client, { session } from "./client.js";
 
 export default class Host extends Client {
@@ -14,8 +16,15 @@ export default class Host extends Client {
     ];
 
     socket.on("sessionStateChange", ({ session: newSession }) => {
+      if (session.state.route !== newSession.route) {
+        confg.config = getNewConfig();
+      }
       session.state = newSession;
       this.route();
+    });
+
+    socket.on("disconnected", () => {
+      window.location.pathname = "/";
     });
   }
 }

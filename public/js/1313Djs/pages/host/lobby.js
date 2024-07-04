@@ -9,11 +9,16 @@ export default class LobbyHost extends Page {
   }
 
   sideEffects() {
+    const kickPlayer = (username) => {
+      session.socket.emit("kickPlayer", { username });
+    };
+
     document.querySelectorAll(".kick-player-button").forEach((kickButton) => {
       kickButton.addEventListener("click", () => {
         kickPlayer(kickButton.id.split("-")[3]);
       });
     });
+
     if (document.querySelector("#start-game-button"))
       document
         .querySelector("#start-game-button")
@@ -27,11 +32,12 @@ export default class LobbyHost extends Page {
           });
         });
 
-    if (document.querySelector("#readyButton"))
+    if (document.querySelector("#readyButton")) {
       initializeGyroscope(
         session.socket,
         document.querySelector("#readyButton")
       );
+    }
   }
 
   getHtml() {

@@ -42,7 +42,7 @@ const playerProtected = (callback) => (io, socket) => (payload) => {
   });
 
   const session = sessions.get(getUserSession(username));
-  if (session?.players.includes(username)) {
+  if (session?.players?.find((player) => player.username === username)) {
     callback(io, socket)(payload);
   } else {
     socket.emit("error", {
