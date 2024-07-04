@@ -181,15 +181,13 @@ export const gameLoop = (config, players, socket) => () => {
     game: gameState,
   });
 
-  if (
-    !(config.score < 3 - session.state?.players?.length || config.score === 0)
-  ) {
-    window.requestAnimationFrame(gameLoop(config, players, socket));
-  } else {
+  if (config.score <= 3 - session.state?.players?.length) {
     session.state.route = "game-end";
     socket.emit("sessionStateChange", {
       session: session.state,
     });
+  } else {
+    window.requestAnimationFrame(gameLoop(config, players, socket));
   }
 };
 

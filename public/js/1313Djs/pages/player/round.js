@@ -51,9 +51,9 @@ export default class RoundPlayer extends Page {
       if (firstRender) {
         drawMaze(mapCanvas, game.state.config);
         drawGoal(mapCanvas, game.state.config, game.state.players[0]);
-        updateGameStats(game.state);
         firstRender = false;
       }
+      updateGameStats(game.state);
     });
 
     let streamDeviceOrientation = setInterval(() => {
