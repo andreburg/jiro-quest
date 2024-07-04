@@ -91,7 +91,7 @@ export class Angle {
   constructor({ beta, gamma }) {
     this.beta = beta;
     this.gamma = gamma;
-    this.alpha =0;
+    this.alpha = 0;
   }
 }
 
@@ -123,7 +123,7 @@ export class Wall {
 }
 
 export function kinematics(angle, ball, time, walls, mapsize) {
-//   console.log(players.length);
+  //   console.log(players.length);
   const g = -1;
   const rebounce = 0.6;
   const initialPosition = [ball.position.x, ball.position.y];
@@ -165,98 +165,125 @@ export function kinematics(angle, ball, time, walls, mapsize) {
   } else ball.position.y = newY;
 
   wallCollision(init, walls, time, rebounce, initialPosition);
-//   if(players.length>=2){collision(ball, players);}
-  
+  //   if(players.length>=2){collision(ball, players);}
 }
 
-export function collision(ball1, ball2,time,mapsize) {
-    const rebounce = 0.5;
+export function collision(ball1, ball2, time, mapsize) {
+  const rebounce = 0.5;
 
-    let distance = Math.sqrt(
-        Math.pow(ball1.position.x - ball2.position.x, 2) +
-        Math.pow(ball1.position.y - ball2.position.y, 2)
-      );
-  console.log(distance,ball1.position.x,ball1.position.y,ball2.position.x,ball2.position.y)
-  if ((distance <= 2*ball1.radius)&&(distance!=0)) {
-    
+  let distance = Math.sqrt(
+    Math.pow(ball1.position.x - ball2.position.x, 2) +
+      Math.pow(ball1.position.y - ball2.position.y, 2)
+  );
+  if (distance <= 2 * ball1.radius && distance != 0) {
+    ball1.velocity.x =
+      ((ball1.mass - ball2.mass) * ball1.velocity.x +
+        2 * ball2.mass * ball2.velocity.x) /
+      (ball1.mass + ball2.mass);
+    ball1.velocity.y =
+      ((ball1.mass - ball2.mass) * ball1.velocity.y +
+        2 * ball2.mass * ball2.velocity.y) /
+      (ball1.mass + ball2.mass);
 
-    ball1.velocity.x = ((ball1.mass-ball2.mass)*ball1.velocity.x + 2*ball2.mass*ball2.velocity.x)/(ball1.mass+ball2.mass);
-    ball1.velocity.y = ((ball1.mass-ball2.mass)*ball1.velocity.y + 2*ball2.mass*ball2.velocity.y)/(ball1.mass+ball2.mass);
+    ball2.velocity.x =
+      ((ball2.mass - ball1.mass) * ball2.velocity.x +
+        2 * ball1.mass * ball1.velocity.x) /
+      (ball1.mass + ball2.mass);
+    ball2.velocity.y =
+      ((ball2.mass - ball1.mass) * ball2.velocity.y +
+        2 * ball1.mass * ball1.velocity.y) /
+      (ball1.mass + ball2.mass);
 
-    ball2.velocity.x = ((ball2.mass-ball1.mass)*ball2.velocity.x + 2*ball1.mass*ball1.velocity.x)/(ball1.mass+ball2.mass);
-    ball2.velocity.y = ((ball2.mass-ball1.mass)*ball2.velocity.y + 2*ball1.mass*ball1.velocity.y)/(ball1.mass+ball2.mass);
+    const ball1X =
+      ball1.position.x +
+      ball1.velocity.x * time +
+      0.5 * ball1.acceleration.x * Math.pow(time, 2);
+    const ball1Y =
+      ball1.position.y +
+      ball1.velocity.y * time +
+      0.5 * ball1.acceleration.y * Math.pow(time, 2);
 
-    const ball1X = ball1.position.x + ball1.velocity.x*time + 0.5*ball1.acceleration.x*Math.pow(time,2);
-    const ball1Y = ball1.position.y + ball1.velocity.y*time + 0.5*ball1.acceleration.y*Math.pow(time,2);
+    const ball2X =
+      ball2.position.x +
+      ball2.velocity.x * time +
+      0.5 * ball2.acceleration.x * Math.pow(time, 2);
+    const ball2Y =
+      ball2.position.y +
+      ball2.velocity.y * time +
+      0.5 * ball2.acceleration.y * Math.pow(time, 2);
 
-    const ball2X = ball2.position.x + ball2.velocity.x*time + 0.5*ball2.acceleration.x*Math.pow(time,2);
-    const ball2Y = ball2.position.y + ball2.velocity.y*time + 0.5*ball2.acceleration.y*Math.pow(time,2);
+    let d2 = Math.sqrt(
+      Math.pow(ball1X - ball2X, 2) + Math.pow(ball1Y - ball2Y, 2)
+    );
 
-    let d2 = Math.sqrt(Math.pow(ball1X - ball2X, 2) + Math.pow(ball1Y - ball2Y, 2));
+    if (d2 > 2 * ball1.radius) {
+      ball1.position.x = ball1X;
+      ball1.position.y = ball1Y;
 
-    if(d2>2*ball1.radius){
-        ball1.position.x = ball1X;
-        ball1.position.y = ball1Y;
-
-        ball2.position.x = ball2X;
-        ball2.position.y = ball2Y;
-    }else{
-        let tx = ball1.position.x;
-        let ty = ball1.position.y;
-        ball1.position.x = ball2.position.x+ball1.radius;
-        ball1.position.y = ball2.position.y+ball1.radius;
-        ball2.position.x = tx+ball2.radius;
-        ball2.position.y = ty+ball2.radius;
+      ball2.position.x = ball2X;
+      ball2.position.y = ball2Y;
+    } else {
+      let tx = ball1.position.x;
+      let ty = ball1.position.y;
+      ball1.position.x = ball2.position.x + ball1.radius;
+      ball1.position.y = ball2.position.y + ball1.radius;
+      ball2.position.x = tx + ball2.radius;
+      ball2.position.y = ty + ball2.radius;
     }
 
     if (ball1X + ball1.radius > mapsize || ball1X - ball1.radius < 0) {
-        ball1.velocity.x = -ball1.velocity.x * rebounce;
-        ball1.acceleration.x = -ball1.acceleration.x;
-        ball1.position.x =
+      ball1.velocity.x = -ball1.velocity.x * rebounce;
+      ball1.acceleration.x = -ball1.acceleration.x;
+      ball1.position.x =
         ball1.position.x +
         ball1.velocity.x * time +
-          0.5 * ball1.acceleration.x * Math.pow(time, 2);
-      } else ball1.position.x = ball1X;
+        0.5 * ball1.acceleration.x * Math.pow(time, 2);
+    } else ball1.position.x = ball1X;
     if (ball1Y + ball1.radius > mapsize || ball1Y - ball1.radius < 0) {
-        ball1.velocity.y = -ball1.velocity.y * rebounce;
-        ball1.acceleration.y = -ball1.acceleration.y;
-        ball1.position.y =
+      ball1.velocity.y = -ball1.velocity.y * rebounce;
+      ball1.acceleration.y = -ball1.acceleration.y;
+      ball1.position.y =
         ball1.position.y +
         ball1.velocity.y * time +
-          0.5 * ball1.acceleration.y * Math.pow(time, 2);
-      } else ball1.position.y = ball1Y;
+        0.5 * ball1.acceleration.y * Math.pow(time, 2);
+    } else ball1.position.y = ball1Y;
     if (ball2X + ball2.radius > mapsize || ball2X - ball2.radius < 0) {
-        ball2.velocity.x = -ball2.velocity.x * rebounce;
-        ball2.acceleration.x = -ball2.acceleration.x;
-        ball2.position.x =
+      ball2.velocity.x = -ball2.velocity.x * rebounce;
+      ball2.acceleration.x = -ball2.acceleration.x;
+      ball2.position.x =
         ball2.position.x +
         ball2.velocity.x * time +
-          0.5 * ball2.acceleration.x * Math.pow(time, 2);
-      } else ball2.position.x = ball2X;
+        0.5 * ball2.acceleration.x * Math.pow(time, 2);
+    } else ball2.position.x = ball2X;
     if (ball2Y + ball2.radius > mapsize || ball2Y - ball2.radius < 0) {
-        ball2.velocity.y = -ball2.velocity.y * rebounce;
-        ball2.acceleration.y = -ball2.acceleration.y;
-        ball2.position.y =
+      ball2.velocity.y = -ball2.velocity.y * rebounce;
+      ball2.acceleration.y = -ball2.acceleration.y;
+      ball2.position.y =
         ball2.position.y +
         ball2.velocity.y * time +
-          0.5 * ball2.acceleration.y * Math.pow(time, 2);
-      } else ball2.position.y = ball2Y;
-
-    
-
+        0.5 * ball2.acceleration.y * Math.pow(time, 2);
+    } else ball2.position.y = ball2Y;
   }
 }
 
 export function endGame(players, config) {
-    players.forEach((player) => {
-        console.log(player.score)
-        if (Math.sqrt(Math.pow(player.ball.position.x - config.mazeSize/2, 2) + Math.pow(player.ball.position.y - config.mazeSize/2, 2)) <= 1.5*player.ball.radius) {
-            // if (Math.sqrt(Math.pow(player.ball.position.x - 1/2, 2) + Math.pow(player.ball.position.y - 1/2, 2)) <= 3*player.ball.radius) {
-            if(player.score===0){
-            player.score = config.score;
-            config.score -= 1;}
-            player.angleWeight = 0;
-        }})}
+  players.forEach((player) => {
+    if (
+      Math.sqrt(
+        Math.pow(player.ball.position.x - config.mazeSize / 2, 2) +
+          Math.pow(player.ball.position.y - config.mazeSize / 2, 2)
+      ) <=
+      1.5 * player.ball.radius
+    ) {
+      // if (Math.sqrt(Math.pow(player.ball.position.x - 1/2, 2) + Math.pow(player.ball.position.y - 1/2, 2)) <= 3*player.ball.radius) {
+      if (player.score === 0) {
+        player.score = config.score;
+        config.score -= 1;
+      }
+      player.angleWeight = 0;
+    }
+  });
+}
 
 // export function maxDistance(pos1, pos2, wallPos){
 //     let d1 = Math.abs(pos1 - wallPos);
@@ -423,12 +450,12 @@ export function generateMaze(width, height) {
   });
   // console.log(maze)
 
-  const middleTop = Math.floor(height/2);
-    const middleLeft = Math.floor(width/2);
-    maze[middleTop][middleLeft].N = false;
-    maze[middleTop][middleLeft].W = false;
-    maze[middleTop][middleLeft+1].W = false;
-    maze[middleTop+1][middleLeft].N = false;
+  const middleTop = Math.floor(height / 2);
+  const middleLeft = Math.floor(width / 2);
+  maze[middleTop][middleLeft].N = false;
+  maze[middleTop][middleLeft].W = false;
+  maze[middleTop][middleLeft + 1].W = false;
+  maze[middleTop + 1][middleLeft].N = false;
 
   return maze;
 }
@@ -437,16 +464,16 @@ export function generateMaze(width, height) {
 ////////////////////
 
 function main() {
- // Example values
-let ball1 = { position: { x: 3, y: 4 } };
-let ball2 = { position: { x: 6, y: 8 } };
+  // Example values
+  let ball1 = { position: { x: 3, y: 4 } };
+  let ball2 = { position: { x: 6, y: 8 } };
 
-let distance = Math.sqrt(
-  Math.pow(ball1.position.x - ball2.position.x, 2) +
-  Math.pow(ball1.position.y - ball2.position.y, 2)
-);
+  let distance = Math.sqrt(
+    Math.pow(ball1.position.x - ball2.position.x, 2) +
+      Math.pow(ball1.position.y - ball2.position.y, 2)
+  );
 
-// console.log(distance); // Output: 5
+  // console.log(distance); // Output: 5
 
   // let ball = new Body({
   //     position: {

@@ -68,7 +68,8 @@
                           </div>
                           <div class="active-session-list-item-horizontal">
                           ${
-                            session.session.players.length < 4
+                            session.session.players.length < 4 &&
+                            session.session.route === "lobby"
                               ? `  <div class="active-session-list-item-join" onclick="(() => {window.location.pathname = '/lobby/${session.sessionId}'})()">Join</div>
         `
                               : "<div></div>"

@@ -5,7 +5,7 @@ import {
   drawGoal,
   drawMaze,
 } from "../../../map.js";
-import { session } from "../../client/client.js";
+import { session, game } from "../../client/client.js";
 import Page from "../page.js";
 export default class RoundSpectator extends Page {
   constructor(params) {
@@ -45,13 +45,13 @@ export default class RoundSpectator extends Page {
       // END: player stats
     };
 
-    session.socket.on("gameStateChange", ({ game }) => {
-      gameState = { ...gameState, ...game };
-      drawGame(ballCanvas, gameState);
+    session.socket.on("gameStateChange", ({ game: newGame }) => {
+      game.state = { ...game.state, ...newGame };
+      drawGame(ballCanvas, game.state);
       if (firstRender) {
-        drawMaze(mapCanvas, gameState.config);
-        drawGoal(mapCanvas, gameState.config, gameState.players[0]);
-        updateGameStats(gameState);
+        drawMaze(mapCanvas, game.state.config);
+        drawGoal(mapCanvas, game.state.config, game.state.players[0]);
+        updateGameStats(game.state);
         firstRender = false;
       }
     });

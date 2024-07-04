@@ -17,7 +17,6 @@ socket.on("disconnected", () => {
 });
 
 socket.on("sessionStateChange", ({ session }) => {
-  console.log(session);
   sessionState = session;
   render[sessionState.status].load(sessionState);
 });

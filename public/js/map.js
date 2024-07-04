@@ -1,3 +1,4 @@
+import { session } from "./1313Djs/client/client.js";
 import State, { Player } from "./gameState.js";
 import * as Physics from "./physics/body.js";
 
@@ -179,7 +180,15 @@ export const gameLoop = (config, players, socket) => () => {
   socket.emit("gameStateChange", {
     game: gameState,
   });
-  window.requestAnimationFrame(gameLoop(config, players, socket));
+
+  if (!(config.score <= 0)) {
+    window.requestAnimationFrame(gameLoop(config, players, socket));
+  } else {
+    session.state.route = "game-end";
+    socket.emit("sessionStateChange", {
+      session: session.state,
+    });
+  }
 };
 
 export const drawGame = (canvas, gameState) => {

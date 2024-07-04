@@ -8,7 +8,7 @@ import {
   gameLoop,
 } from "../../../map.js";
 import Page from "../page.js";
-import { session } from "../../client/client.js";
+import { session, game } from "../../client/client.js";
 import { confg } from "../../state/config.js";
 
 export default class RoundHost extends Page {
@@ -17,7 +17,7 @@ export default class RoundHost extends Page {
   }
 
   sideEffects() {
-    let gameState;
+    console.log(game);
     let firstRender = true;
     const mapArea = document.querySelector("#unit-map-area");
     const mapCanvas = createUnitMapArea(mapArea);
@@ -47,7 +47,6 @@ export default class RoundHost extends Page {
           startPositions = { x: 0.5, y: 0.5, z: 0.5 };
           break;
       }
-      console.log(startPositions);
       return new Player({
         username: player.username,
         position: startPositions,
@@ -83,15 +82,15 @@ export default class RoundHost extends Page {
       // END: player stats
     };
 
-    session.socket.on("gameStateChange", ({ game }) => {
-      gameState = { ...gameState, ...game };
-      drawGame(ballCanvas, gameState);
+    session.socket.on("gameStateChange", ({ game: newGame }) => {
+      game.state = { ...game.state, ...newGame };
+      drawGame(ballCanvas, game.state);
       if (firstRender) {
-        drawMaze(mapCanvas, gameState.config);
-        drawGoal(mapCanvas, gameState.config, gameState.players[0]);
+        drawMaze(mapCanvas, game.state.config);
+        drawGoal(mapCanvas, game.state.config, game.state.players[0]);
         firstRender = false;
       }
-      updateGameStats(gameState);
+      updateGameStats(game.state);
       // console.log(gameState.players[0].score)
     });
 

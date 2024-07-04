@@ -1,14 +1,16 @@
 import { initializeGyroscope } from "../../../map.js";
-import { session } from "../../client/client.js";
+import { game, session } from "../../client/client.js";
 import Page from "../page.js";
 export default class LobbyHost extends Page {
   constructor(params) {
     super(params);
     // this.comps.Add("nav", new Nav());
     // this.comps.Add("calculator", new Calculator());
+    this.playerScore = session.state.players?.find(player);
   }
 
   sideEffects() {
+    console.log(session);
     const kickPlayer = (username) => {
       session.socket.emit("kickPlayer", { username });
     };

@@ -19,7 +19,6 @@ export default class Client {
   }
 
   route = async () => {
-    console.log(session.state);
     let route = this.router.loadRoute(session.state);
     app.innerHTML = await route.comp.getHtml();
     route.comp.sideEffects();
@@ -33,4 +32,8 @@ export const session = {
     route: "lobby",
   },
   socket: null,
+};
+
+export const game = {
+  state: null,
 };
