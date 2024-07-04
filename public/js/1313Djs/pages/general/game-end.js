@@ -11,17 +11,12 @@ export default class GameEnd extends Page {
       (player) => player.socketId === session.socket.id
     )?.username;
 
-    this.score = game.state?.players.find(
-      (player) => player.username === this.username
-    )?.score;
+    this.winner = game.state.players.find((player) => player.score === 3);
 
-    this.maxScore = Math.max(game.state?.players.map((player) => player.score));
+    console.log("you", this.username);
+    console.log("winner", this.winner);
 
-    this.winner = game.state.players.find(
-      (player) => player.score === this.maxScore
-    );
-
-    if (this.score >= this.maxScore) {
+    if (this.username === this.winner.username) {
       return `
       <div class="win-background">
         <main class="center-div">
@@ -45,7 +40,7 @@ export default class GameEnd extends Page {
                     <h1>🥲 You Lose! 😭</h1>
                   </div>
                   <div class="">
-                    <button class="button-large" onclick="window.location.href='/';">
+                    button class="button-large" onclick="window.location.href='/';">
                       Home
                     </button>
                   </div>
