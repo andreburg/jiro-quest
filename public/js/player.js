@@ -91,7 +91,9 @@ const render = {
       let walls = Physics.wallCoordinates(confg.maze);
       confg.walls = walls;
       document.querySelector("#app").innerHTML = `
-      <div id="unit-map-area">
+      <div id="unit-map-area" class="user-map-container">
+      </div>
+      <div id="live-stats-container">
       </div>
       `;
       let gameState;
@@ -101,6 +103,27 @@ const render = {
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
         drawGame(canvas, gameState);
+
+        // NOTE: the following code just updates the player stats
+        // We can take this out if its messing with the socket or the performance
+        // START: player stats
+        const playerStatsContainer = document.getElementById("live-stats-container");
+        playerStatsContainer.innerHTML = "";
+
+        gameState.players.forEach((player) => {
+          const playerStats = document.createElement("div");
+
+          playerStats.innerHTML = `
+          <div class="player-stats-container"
+          style="background-color: ${player.ball.colour}"
+          >
+            <div class="player-stats-username">${player.username}</div>
+            <div class="player-stats-score">${player.score}</div>
+          </div>
+          `;
+          playerStatsContainer.appendChild(playerStats);
+        });
+        // END: player stats
       });
 
       let streamDeviceOrientation = setInterval(() => {

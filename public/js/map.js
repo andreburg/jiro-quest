@@ -13,8 +13,10 @@ export const config = (mazeSize) => ({
 export function createUnitMapArea(htmlElement) {
   const canvas = document.createElement("canvas");
   canvas.id = "gameCanvas";
-  canvas.height = window.innerHeight * 0.9;
-  canvas.width = canvas.height;
+  canvas.height = htmlElement.clientHeight;
+  canvas.width = htmlElement.clientWidth;
+  // canvas.height = window.innerHeight * 0.9;
+  // canvas.width = canvas.height;
   canvas.style.border = "1px solid black";
   const ctx = canvas.getContext("2d");
   ctx.lineWidth = 6;

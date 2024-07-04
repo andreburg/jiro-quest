@@ -76,16 +76,16 @@ export class Player {
 }
 function generateRandomColorString() {
   const colors = [
-    "red",
-    "green",
-    "blue",
-    "yellow",
-    "purple",
-    "orange",
-    "pink",
-    "black",
-    "white",
-    "grey",
+    "#FF5733", // Vibrant Red
+    "#FFBD33", // Bright Yellow
+    "#75FF33", // Lime Green
+    "#33FF57", // Light Green
+    "#33FFBD", // Aquamarine
+    "#339FFF", // Sky Blue
+    "#3357FF", // Bright Blue
+    "#7D33FF", // Violet
+    "#FF33BD", // Hot Pink
+    "#FF3375"  // Coral Pink
   ];
   return colors[Math.floor(Math.random() * colors.length)];
 }
