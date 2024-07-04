@@ -876,6 +876,18 @@ table td, table th {
   max-height: -webkit-fill-available;
 }
 
+.user-ball-container {
+  box-shadow: var(--box-shadow-medium);
+  max-width: 90vw;
+  max-height: 90vw;
+  width: 90vw;
+  height: 90vw;
+  border: var(--border-thick);
+  /* set max widths for safari browsers */
+  max-width: -webkit-fill-available;
+  max-height: -webkit-fill-available;
+}
+
 #live-stats-container {
   margin-top: 2rem;
   width: 100%;
@@ -911,4 +923,16 @@ table td, table th {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.layered-canvases-container {
+  position: relative;
+  width: 80vw;
+  height: 80vw;
+}
+
+.layered-canvases-container > div {
+  position: absolute;
+  top: 0;
+  left: 0;
 }

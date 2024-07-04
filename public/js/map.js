@@ -181,8 +181,8 @@ export const drawGame = (canvas, gameState) => {
   config.scale = canvas.height / config.mazeSize;
   const cxt = canvas.getContext("2d");
   cxt.clearRect(0, 0, canvas.width, canvas.height);
-  drawMaze(canvas, config);
-  drawGoal(canvas, config, players[0]);
+  // drawMaze(canvas, config);
+  // drawGoal(canvas, config, players[0]);
   players.forEach((player) => {if(player.angleWeight===1){drawBall(player, config, canvas)}});
 };
 

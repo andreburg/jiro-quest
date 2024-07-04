@@ -92,7 +92,11 @@ const render = {
       let walls = Physics.wallCoordinates(confg.maze);
       confg.walls = walls;
       document.querySelector("#app").innerHTML = `
-      <div id="unit-map-area" class="user-map-container">
+      <div class="layered-canvases-container">
+        <div id="unit-map-area" class="user-map-container">
+        </div>
+        <div id="ball-canvas-container" class="user-ball-container">
+        </div>
       </div>
       <div id="live-stats-container">
       </div>
@@ -100,7 +104,9 @@ const render = {
       let gameState;
       let firstRender = true;
       const mapArea = document.querySelector("#unit-map-area");
-      const canvas = createUnitMapArea(mapArea);
+      const mapCanvas = createUnitMapArea(mapArea);
+      const ballArea = document.querySelector("#ball-canvas-container");
+      const ballCanvas = createUnitMapArea(ballArea);
 
       const updateGameStats = (gameState) => {
         // NOTE: the following code just updates the player stats
@@ -127,8 +133,10 @@ const render = {
 
       socket.on("gameStateChange", ({ game }) => {
         gameState = { ...gameState, ...game };
-        drawGame(canvas, gameState);
+        drawGame(ballCanvas, gameState);
         if (firstRender) {
+          drawMaze(mapCanvas, gameState.config);
+          drawGoal(mapCanvas, gameState.config, gameState.players[0]);
           updateGameStats(gameState)
           firstRender = false;
         };
