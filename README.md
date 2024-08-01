@@ -1,2 +1,2 @@
 # JiroQuest
-Web Based game that is based on getting a ball in a hole using your phone Jiro.
+Multiplayer web based game based on getting a ball in a hole using your phone gyro over a socket connection for live interactivity.
